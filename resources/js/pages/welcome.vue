@@ -18,11 +18,9 @@
 
     <div class="text-center">
       <div class="title mb-4">
-        {{ title }}
-      </div>
-
-      <div class="links">
-        <a href="https://github.com/cretueusebiu/laravel-vue-spa">github.com/cretueusebiu/laravel-vue-spa</a>
+        <h1 class="fw-bold">Tandheelkundig Centrum</h1>
+        <h2 class="">Hengelo</h2>
+        <img src="/img/logo.png" alt="" width="125px">
       </div>
     </div>
   </div>

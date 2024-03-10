@@ -1,7 +1,7 @@
 <template>
   <div class="row">
     <div class="col-lg-10 m-auto">
-      <card :title="$t('home')">
+      <card v-if="showCard" :title="$t('home')">
         {{ $t('you_are_logged_in') }}
       </card>
     </div>
@@ -9,20 +9,21 @@
 </template>
 
 <script>
-// import axios from 'axios'
 export default {
+  data() {
+    return {
+      showCard: true
+    };
+  },
   middleware: 'auth',
 
-  // async asyncData () {
-  //   const { data: projects } = await axios.get('/api/projects')
-
-  //   return {
-  //     projects
-  //   }
-  // },
-
-  metaInfo () {
-    return { title: this.$t('home') }
+  metaInfo() {
+    return { title: this.$t('home') };
+  },
+  mounted() {
+    setTimeout(() => {
+      this.showCard = false;
+    }, 5000);
   }
-}
+};
 </script>
