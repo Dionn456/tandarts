@@ -34,6 +34,8 @@ class TreatmentSeeder extends Seeder
         foreach ($treatments as $treatment) {
             $db_treatment = new Treatment;
             $db_treatment->name = $treatment->name;
+            $db_treatment->duration = $treatment->duration;
+            $db_treatment->price = $treatment->price;
             $db_treatment->save();
         }
     }
