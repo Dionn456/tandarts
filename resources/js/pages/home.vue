@@ -27,8 +27,9 @@
         </div>
         <div class="row">
           <div class="col-md-3 mb-4" v-for="user in users" :key="user.id">
-            <div class="card">
-              <img :src="user.image_url" class="card-img-top" :alt="user.name">
+            <div class="text-center">
+              <img :src="user.image_url" :alt="user.name" class="rounded-circle img-fluid mb-4"
+                style="width: 120px; height: 120px;">
               <div class="">
                 <h6 class="">{{ user.firstname }}</h6>
                 <h6 class="">{{ user.role.name }}</h6>
@@ -38,11 +39,24 @@
         </div>
       </div>
 
-      <div class="col-lg-8 m-auto mb-xl-5 ">
+      <div class="col-lg-8 m-auto mb-xl-5 mt-xl-5">
         <h1 class="fw-bold mb-4">Behandelingen</h1>
-        <p class="">
-
-        </p>
+        <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Behandeling</th>
+          <th scope="col">Prijs</th>
+          <th scope="col">Tijd</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="treatment in treatments" :key="treatment.id">
+          <td>{{ treatment.name }}</td>
+          <td>€{{ treatment.price }}</td>
+          <td>{{ treatment.duration }}min</td>
+        </tr>
+      </tbody>
+    </table>
       </div>
     </div>
   </div>
@@ -54,7 +68,8 @@ export default {
   data() {
     return {
       showCard: true,
-      users: []
+      users: [],
+      treatments: [],
     };
   },
   middleware: 'auth',
@@ -68,14 +83,20 @@ export default {
     }, 5000);
 
     const self = this;
-    self.fetchUser();
+    self.getDentist();
+    self.getTreatment();
   },
   methods: {
-    fetchUser() {
+    getDentist() {
       const self = this;
       self.$https.get('/api/users').then(response => {
         self.users = response.data.filter(user => user.role_id === 2 || user.role_id === 3);
       });
+    },
+    getTreatment() {
+      const self = this;
+      self.$https.get('/api/treatments').then(response => self.treatments = response.data);
+      console.log(self.treatments);
     }
   }
 };

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Treatment;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class TreatmentController extends Controller
@@ -12,9 +13,10 @@ class TreatmentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): JsonResponse
     {
-        //
+        $treatments = Treatment::all(); 
+        return response()->json($treatments);
     }
 
     /**
