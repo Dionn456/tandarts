@@ -12,7 +12,7 @@
           <div class="mb-3 row">
             <label class="col-md-3 col-form-label text-md-end">{{ $t('name') }}</label>
             <div class="col-md-7">
-              <input v-model="form.name" :class="{ 'is-invalid': form.errors.has('name') }" class="form-control" type="text" name="name">
+              <input v-model="form.firstname" :class="{ 'is-invalid': form.errors.has('name') }" class="form-control" type="text" name="name">
               <has-error :form="form" field="name" />
             </div>
           </div>

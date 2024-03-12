@@ -27,14 +27,14 @@
         </div>
         <div class="row">
           <div class="col-md-3 mb-4" v-for="user in users" :key="user.id">
-        <div class="card">
-          <img :src="user.image_url" class="card-img-top" :alt="user.name">
-          <div class="card-body">
-            <h6 class="card-title">{{ user.firstname }}</h6>
-            <h6 class="card-title">{{ user.role.name }}</h6>
+            <div class="card">
+              <img :src="user.image_url" class="card-img-top" :alt="user.name">
+              <div class="">
+                <h6 class="">{{ user.firstname }}</h6>
+                <h6 class="">{{ user.role.name }}</h6>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
         </div>
       </div>
 
@@ -54,11 +54,6 @@ export default {
   data() {
     return {
       showCard: true,
-      user: {
-        firstname: '',
-        lastname: '',
-        role: '',
-      },
       users: []
     };
   },
@@ -78,9 +73,10 @@ export default {
   methods: {
     fetchUser() {
       const self = this;
-      self.$https.get('/api/users').then(response => self.users = response.data);
-      console.log(self.users);
-    },
+      self.$https.get('/api/users').then(response => {
+        self.users = response.data.filter(user => user.role_id === 2 || user.role_id === 3);
+      });
+    }
   }
 };
 </script>
