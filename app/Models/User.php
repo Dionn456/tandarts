@@ -54,6 +54,10 @@ class User extends Authenticatable implements JWTSubject //, MustVerifyEmail
         'photo_url',
     ];
 
+    protected $with = [
+        'role',
+    ];
+
     /**
      * Get the profile photo URL attribute.
      *
@@ -75,6 +79,11 @@ class User extends Authenticatable implements JWTSubject //, MustVerifyEmail
     public function oauthProviders()
     {
         return $this->hasMany(OAuthProvider::class);
+    }
+
+    public function role()
+    {
+        return $this->hasOne(Role::class, "id", "role_id");
     }
 
     /**
