@@ -14,6 +14,7 @@
     "@fortawesome/vue-fontawesome": "^2.0.2",
     "@fullcalendar/core": "^6.1.11",
     "@fullcalendar/daygrid": "^6.1.11",
+    "@fullcalendar/interaction": "^6.1.11",
     "@fullcalendar/vue": "^6.1.11",
     "@popperjs/core": "^2.9.3",
     "axios": "^0.21.1",

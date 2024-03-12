@@ -14,7 +14,7 @@ export default [
 
   { path: '/rooms', name: 'rooms', component: page('rooms.vue') },
   { path: '/users', name: 'users', component: page('users.vue') },
-  { path: '/appointments', name: 'appointments', component: page('appointments.vue') },
+  { path: '/appointments', name: 'appointments', component: page('appointments/appointments.vue') },
 
   { path: '/home', name: 'home', component: page('home.vue') },
   {

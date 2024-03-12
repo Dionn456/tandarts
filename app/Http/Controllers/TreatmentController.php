@@ -14,7 +14,7 @@ class TreatmentController extends Controller
      */
     public function index()
     {
-        //
+        return Treatment::all();
     }
 
     /**
