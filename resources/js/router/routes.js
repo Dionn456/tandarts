@@ -13,7 +13,7 @@ export default [
   { path: '/email/resend', name: 'verification.resend', component: page('auth/verification/resend.vue') },
 
   { path: '/rooms', name: 'rooms', component: page('rooms.vue') },
-  { path: '/users', name: 'users', component: page('users.vue') },
+  { path: '/users', name: 'users', component: page('users/users.vue') },
   { path: '/appointments', name: 'appointments', component: page('appointments.vue') },
 
   { path: '/home', name: 'home', component: page('home.vue') },

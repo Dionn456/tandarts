@@ -28,8 +28,7 @@
         <div class="row">
           <div class="col-md-3 mb-4" v-for="user in users" :key="user.id">
             <div class="text-center">
-              <img :src="user.image_url" :alt="user.name" class="rounded-circle img-fluid mb-4"
-                style="width: 120px; height: 120px;">
+              <img :src="user.image_url" :alt="user.name" class="rounded-circle img-fluid mb-4" style="width: 130px; height: 120px;">
               <div class="">
                 <h6 class="">{{ user.firstname }}</h6>
                 <h6 class="">{{ user.role.name }}</h6>
