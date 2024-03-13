@@ -1,14 +1,14 @@
 <template>
     <div>
-      <!-- <addAppointment ref="add" @finished="getAppointments" /> -->
+      <changeAppointment ref="change" :appointment="appointment" @finished="getAppointments" />
       <!-- <viewAppointment ref="view" /> -->
       <div class="row">
-        <div class="col-lg-4 ">
-            <card title="Gebruiker">
+        <div class="col-lg-4">
+            <card title="Afspraak maken">
                 <div class="mb-3 row">
                     <label class="col-md-12 col-form-label">Patient toevoegen</label>
                     <div class="col-md-12">
-                        <v-select :options="users" v-model="appointment.user" label="name" placeholder="Selecteer gebruiker"></v-select>
+                        <v-select :options="users" v-model="appointment.user_id" label="name" placeholder="Selecteer gebruiker"></v-select>
                     </div>
                 </div>
                 <div class="mb-3 row">
@@ -20,12 +20,27 @@
                 <div class="mb-3 row">
                     <label class="col-md-12 mb-1">Behandelingen</label>
                     <div class="col-md-12">
-                        <div v-for="(treatment, index) in appointment.treatments" :key="index">
-                            <v-select @change="treatmentChange(treatment, index)"  :options="treatments" v-model="treatment.treatment_id" label="name" placeholder="Selecteer behandeling"></v-select>
+                        <div v-for="(treatment, index) in appointment.treatments" :key="index" class="mb-1">
+                            <v-select  :options="treatments" v-model="treatment.treatment_id" label="name" placeholder="Selecteer behandeling"></v-select>
                         </div>
+                    </div>
+                    <div class="col-md-12 mt-1">
+                      <button type="button" class="btn btn-success w-100" @click="addTreatment()">+</button>
                     </div>
                 </div>
 
+                <div class="mb-3 row">
+                    <label class="col-md-12 mb-1">Tijden</label>
+                    <div class="col-md-12">
+                      <DatePicker type="datetime" :minute-step="15" format="D-M-Y HH:mm" v-model="appointment.start" class="w-100" disabled />
+                    </div>
+                </div>
+                <div class="row">
+                  <button type="button" class="btn btn-primary w-100" @click="addTreatment()">Afpsraak aanmaken</button>
+                    
+                </div>
+
+                
             </card>
         </div>
         <div class="col-lg-8">
@@ -42,8 +57,11 @@
   import FullCalendar from '@fullcalendar/vue'
   import dayGridPlugin from '@fullcalendar/daygrid'
   import interactionPlugin from '@fullcalendar/interaction'
-//   import addAppointment from '../../modals/addAppointment.vue';
-//   import viewAppointment from '../../modals/viewAppointment.vue';
+
+  import DatePicker from 'vue2-datepicker';
+  import 'vue2-datepicker/index.css';
+
+  import changeAppointment from '../../modals/changeAppointment.vue';
 
 import 'vue-select/dist/vue-select.css';
   
@@ -51,8 +69,7 @@ import 'vue-select/dist/vue-select.css';
   export default {
     middleware: 'auth',
     components: {
-      FullCalendar, 
-    //   addAppointment, viewAppointment
+      FullCalendar, DatePicker, changeAppointment
     },
     data() {
       return {
@@ -67,7 +84,9 @@ import 'vue-select/dist/vue-select.css';
           events: []
         },
         appointment: {
-            user: null,
+            start: null,
+            end: null,
+            user_id: null,
             description: "",
             treatments: [
                 { treatment_id: null, }
@@ -127,20 +146,25 @@ import 'vue-select/dist/vue-select.css';
             self.users = users;
         }
       },
-      treatmentChange(treatment, index) {
+      addTreatment() {
         const self = this 
-        console.log("change", treatment, index);
-        // if (treatment.treatment_id != null) {
-            self.appointment.treatments.push({treatment_id: null}); 
-        // }
 
-
+        self.appointment.treatments.push({treatment_id: null}); 
       },
       handleDateclick(event) {
         const self = this;
-        console.warn('date click', event);
 
-        // self.$refs.add.show(event.date);
+        if (self.appointment.user_id == null)
+        {
+          return self.$swal.fire({
+              icon: 'error',
+              title: 'Fout!',
+              text: "Geen gebruiker geselecteerd!",
+              timer: 10000
+          });
+        }
+
+        self.$refs.change.show(event);
       },
       handleEventClick(event) {
         const self = this;
