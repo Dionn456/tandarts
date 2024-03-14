@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Address;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Hash;
+
 
 class UserController extends Controller
 {
@@ -43,11 +46,42 @@ class UserController extends Controller
         return redirect()->back();
     }
 
+    public function updateUser(Request $request): JsonResponse
+    {
+        $user = User::find($request->id);
+
+        $user->firstname = $request->firstname;
+        $user->middlename = $request->middlename;
+        $user->lastname = $request->lastname;
+        $user->email = $request->email;
+        $user->phone = $request->phone;
+        if (strlen($request->password) >= 4) $user->password = Hash::make($request->password);
+        $user->save();
+
+        $address = ($h = Address::where('id', $user->id)->first()) ? $h : new Address;
+        $address->id = $address->id;
+        $address->zip_code = $request->address["zip_code"];
+        $address->city = $request->address["city"];
+        $address->street = $request->address["street"];
+        $address->number = $request->address["number"];
+        $address->save();
+
+        return response()->json($user);
+    }
+
     
     public function getUser($userId): JsonResponse
     {
         $user = User::where('id', $userId)->first();
         
         return response()->json($user);
+    }
+
+    public function destroy($userId): JsonResponse
+    {
+        $user = User::findOrFail($userId);
+        $user->delete();
+
+        return response()->json(['message' => 'Room deleted successfully']);
     }
 }
