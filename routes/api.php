@@ -33,8 +33,6 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('users', [UserController::class, 'store']);
     Route::get('users/{userId}', [UserController::class, 'getUser']);
 
-    Route::get('address', [AddressController::class, 'index']);
-
     Route::get('roles', [RoleController::class, 'index']);
 
     Route::get('treatments', [TreatmentController::class, 'index']);

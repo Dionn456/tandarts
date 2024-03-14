@@ -89,7 +89,7 @@ class User extends Authenticatable implements JWTSubject //, MustVerifyEmail
 
     public function address()
     {
-        return $this->hasOne(Role::class, "id", "address_id");
+        return $this->hasOne(Address::class, "id", "address_id");
     }
 
     /**
