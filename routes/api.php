@@ -32,8 +32,6 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::get('treatments', [TreatmentController::class, 'index']);
 
-    Route::get('treatments', [TreatmentController::class, 'index']);
-
     Route::patch('settings/profile', [ProfileController::class, 'update']);
     Route::patch('settings/password', [PasswordController::class, 'update']);
 });
