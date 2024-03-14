@@ -1,6 +1,6 @@
 <template>
-    <modal name="add-user" height="437">
-        <div class="">
+    <modal name="add-user" height="600">
+        <div>
             <div>
                 <header class="modal-header" id="modalTitle">
                     <slot name="header">Patiënt toevoegen</slot>
@@ -19,6 +19,16 @@
                     <div class="mb-3">
                         <label for="email" class="form-label">Email</label>
                         <input v-model="user.email" type="email" class="form-control" id="email">
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Wachtwoord</label>
+                        <input v-model="user.password" type="password" class="form-control" id="password">
+                    </div>
+                    <div class="mb-3">
+                        <label for="dentist" class="form-label">Tandarts</label>
+                        <select id="rol" class="form-control mb-3 diss" v-model="users.role_id">
+                            <option v-for="user in users" :key="user.id" :value="user.id">{{ user.firstname + " - " + user.role.name }}</option>
+                        </select>
                     </div>
                 </main>
 
@@ -39,8 +49,15 @@ export default {
                 firstname: '',
                 lastname: '',
                 email: '',
-            }
+                password: '',
+                role_id: null,
+            },
+            users: [],
         };
+    },
+    mounted() {
+        const self = this;
+        self.fetchUser();
     },
     methods: {
         close() {
@@ -54,13 +71,19 @@ export default {
                     icon: 'success',
                     title: 'Success!',
                     text: "Gebruiker toegevoegd.",
-                    timer: 10000
+                    timer: 3000
+                }).then(() => {
+                    window.location.href = '/users';
                 });
-                window.location.href = '/users';
+            });
+        },
+        fetchUser() {
+            const self = this;
+            self.$https.get('/api/users').then(response => {
+                self.users = response.data.filter(user => user.role_id === 2);
             });
         },
     },
-
 };
 </script>
 
