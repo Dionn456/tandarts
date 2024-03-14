@@ -2,7 +2,8 @@
     <div class="container">
         <div class="row mb-1">
             <div class="col-3">
-                <input type="text" v-model="search" class="form-control form-control-sm narrow-search diss" placeholder="Zoeken...">
+                <input type="text" v-model="search" class="form-control form-control-sm narrow-search diss"
+                    placeholder="Zoeken...">
             </div>
             <div class="col d-flex justify-content-end align-items-center">
                 <button type="button" class="btn btn-primary" @click="openModal()">Patiënt toevoegen</button>
@@ -76,29 +77,28 @@ export default {
             const self = this;
             self.$https.get('/api/users').then(response => self.users = response.data);
         },
-        // removeUser(userId) {
-        //   const self = this;
-        //   if (confirm('Are you sure you want to delete this user?')) {
-        //     self.$https.delete(`/api/users/${userId}`)
-        //       .then(response => {
-        //         const index = self.users.findIndex(user => user.id === userId);
-        //         if (index !== -1) {
-        //           self.users.splice(index, 1);
-        //         }
-        //         console.log(response.data.message);
+        removeUser(userId) {
+            const self = this;
+            if (confirm('Are you sure you want to delete this user?')) {
+                self.$https.delete(`/api/users/${userId}`)
+                    .then(response => {
+                        const index = self.users.findIndex(user => user.id === userId);
+                        if (index !== -1) {
+                            self.users.splice(index, 1);
+                        }
 
-        //         self.$swal.fire({
-        //           icon: 'success',
-        //           title: 'Success!',
-        //           text: "Gebruiker verwijderd.",
-        //           timer: 10000
-        //         });
-        //       })
-        //       .catch(error => {
-        //         console.error('Error deleting room:', error);
-        //       });
-        //     }
-        //   },
+                        self.$swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: "Gebruiker verwijderd.",
+                            timer: 3000
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error deleting room:', error);
+                    });
+            }
+        },
     },
     computed: {
         filteredUsers() {

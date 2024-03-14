@@ -1,5 +1,5 @@
 <template>
-    <modal name="add-user" height="600">
+    <modal name="add-user" height="675">
         <div>
             <div>
                 <header class="modal-header" id="modalTitle">
@@ -11,6 +11,10 @@
                     <div class="mb-3">
                         <label for="firstname" class="form-label">Voornaam</label>
                         <input v-model="user.firstname" type="text" class="form-control" id="firstname">
+                    </div>
+                    <div class="mb-3">
+                        <label for="middlename" class="form-label">Tussenvoegsel</label>
+                        <input v-model="user.middlename" type="text" class="form-control" id="middlename">
                     </div>
                     <div class="mb-3">
                         <label for="lastname" class="form-label">Achternaam</label>
@@ -47,6 +51,7 @@ export default {
         return {
             user: {
                 firstname: '',
+                middlename: '',
                 lastname: '',
                 email: '',
                 password: '',
