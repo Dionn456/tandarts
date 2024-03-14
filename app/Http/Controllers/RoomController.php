@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Room;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class RoomController extends Controller
@@ -14,7 +15,8 @@ class RoomController extends Controller
      */
     public function index()
     {
-        //
+        $rooms = Room::all(); 
+        return response()->json($rooms);
     }
 
     /**
@@ -33,9 +35,15 @@ class RoomController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
-        //
+        $room = new Room();
+        $room->name = $request->name;
+        $room->floor = $request->floor;
+        $room->number = $request->number;
+        $room->save();
+
+        return redirect()->back();
     }
 
     /**
@@ -78,8 +86,11 @@ class RoomController extends Controller
      * @param  \App\Models\Room  $room
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Room $room)
+    public function destroy($roomId)
     {
-        //
+        $room = Room::findOrFail($roomId);
+        $room->delete();
+
+        return response()->json(['message' => 'Room deleted successfully']);
     }
 }

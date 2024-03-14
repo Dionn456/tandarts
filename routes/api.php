@@ -13,6 +13,8 @@ use App\Http\Controllers\Settings\ProfileController;
 use App\Http\Controllers\TreatmentController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\RoomController;
+use App\Models\Room;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,6 +40,10 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('roles', [RoleController::class, 'index']);
 
     Route::get('treatments', [TreatmentController::class, 'index']);
+
+    Route::post('room', [RoomController::class, 'store']);
+    Route::get('rooms', [RoomController::class, 'index']);
+    Route::delete('room/{roomId}', [RoomController::class, 'destroy']);
 
     Route::patch('settings/profile', [ProfileController::class, 'update']);
     Route::patch('settings/password', [PasswordController::class, 'update']);

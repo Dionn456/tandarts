@@ -10,23 +10,23 @@
                 <main class="modal-body" id="modalDescription">
                     <div class="mb-3">
                         <label for="firstname" class="form-label">Voornaam</label>
-                        <input v-model="user.firstname" type="text" class="form-control" id="firstname">
+                        <input v-model="user.firstname" type="text" class="form-control diss" id="firstname">
                     </div>
                     <div class="mb-3">
                         <label for="middlename" class="form-label">Tussenvoegsel</label>
-                        <input v-model="user.middlename" type="text" class="form-control" id="middlename">
+                        <input v-model="user.middlename" type="text" class="form-control diss" id="middlename">
                     </div>
                     <div class="mb-3">
                         <label for="lastname" class="form-label">Achternaam</label>
-                        <input v-model="user.lastname" type="text" class="form-control" id="lastname">
+                        <input v-model="user.lastname" type="text" class="form-control diss" id="lastname">
                     </div>
                     <div class="mb-3">
                         <label for="email" class="form-label">Email</label>
-                        <input v-model="user.email" type="email" class="form-control" id="email">
+                        <input v-model="user.email" type="email" class="form-control diss" id="email">
                     </div>
                     <div class="mb-3">
                         <label for="password" class="form-label">Wachtwoord</label>
-                        <input v-model="user.password" type="password" class="form-control" id="password">
+                        <input v-model="user.password" type="password" class="form-control diss" id="password">
                     </div>
                     <div class="mb-3">
                         <label for="dentist" class="form-label">Tandarts</label>
@@ -93,47 +93,15 @@ export default {
 </script>
 
 <style>
-.modal-backdrop {
-    background-color: rgba(0, 0, 0, 0.3);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+/* fix focus */
+.diss:focus {
+    transform: none;
+    box-shadow: none;
+    outline: none;
 }
 
-.modal {
-    background: #FFFFFF;
-    box-shadow: 2px 2px 20px 1px;
-    display: flex;
-    flex-direction: column;
-    border-radius: 10px;
-    width: 60%;
-    max-width: 400px;
-    max-height: 450px;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-.modal-header,
-.modal-footer {
-    padding: 15px;
-    display: flex;
-}
-
-.modal-footer {
-    border-top: 1px solid rgb(227, 231, 233);
-    flex-direction: column;
-    justify-content: flex-end;
-}
-
-.modal-body {
-    padding: 20px 10px;
+.diss {
+    border-radius: 7px;
 }
 
 .close-btn {
@@ -147,15 +115,6 @@ export default {
     font-weight: bold;
     color: red;
     background: transparent;
-}
-
-.modal-fade-enter,
-.modal-fade-leave-to {
-    opacity: 0;
-}
-
-.modal-fade-enter-active,
-.modal-fade-leave-active {
-    transition: opacity 0.5s ease;
+    margin-right: 10px;
 }
 </style>
