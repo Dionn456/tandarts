@@ -11,6 +11,7 @@ use App\Http\Controllers\Settings\PasswordController;
 use App\Http\Controllers\Settings\ProfileController;
 use App\Http\Controllers\TreatmentController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RoleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,6 +30,9 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('user', [UserController::class, 'current']);
     Route::get('users', [UserController::class, 'index']);
     Route::post('users', [UserController::class, 'store']);
+    Route::get('users/{userId}', [UserController::class, 'getUser']);
+
+    Route::get('roles', [RoleController::class, 'index']);
 
     Route::get('treatments', [TreatmentController::class, 'index']);
 

@@ -42,4 +42,12 @@ class UserController extends Controller
 
         return redirect()->back();
     }
+
+    
+    public function getUser($userId): JsonResponse
+    {
+        $user = User::where('id', $userId)->first();
+        
+        return response()->json($user);
+    }
 }

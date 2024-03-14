@@ -2,7 +2,7 @@
     <div class="container">
         <div class="row mb-1">
             <div class="col-3">
-                <input type="text" v-model="search" class="form-control form-control-sm narrow-search rounded-pill diss" placeholder="Zoeken...">
+                <input type="text" v-model="search" class="form-control form-control-sm narrow-search diss" placeholder="Zoeken...">
             </div>
             <div class="col d-flex justify-content-end align-items-center">
                 <button type="button" class="btn btn-primary" @click="openModal()">Patiënt toevoegen</button>
@@ -27,7 +27,7 @@
                     <td class="col-3">{{ user.role.name }}</td>
                     <td class="col-1">
                         <div class="d-flex justify-content-center gap-3">
-                            <a :href="'/users/' + user.id" class="float-end">
+                            <a :href="'/user/' + user.id" class="float-end">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                     stroke-width="1.5" stroke="orange" width="20">
                                     <path stroke-linecap="round" stroke-linejoin="round"
