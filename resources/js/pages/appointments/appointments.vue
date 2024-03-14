@@ -5,19 +5,25 @@
       <div class="row">
         <div class="col-lg-4">
             <card title="Afspraak maken">
-                <div class="mb-3 row">
+                <div class="mb-2 row">
                     <label class="col-md-12 col-form-label">Patient toevoegen</label>
                     <div class="col-md-12">
-                        <v-select :options="users" v-model="appointment.user_id" label="name" placeholder="Selecteer gebruiker"></v-select>
+                        <v-select @input="changeUser()" :options="users" v-model="appointment.user" label="name" placeholder="Selecteer gebruiker"></v-select>
                     </div>
                 </div>
-                <div class="mb-3 row">
+                <div class="mb-2 row">
+                    <label class="col-md-12 col-form-label">Tandarts</label>
+                    <div class="col-md-12">
+                        <v-select :options="dentists" v-model="appointment.dentist" label="name" placeholder="Selecteer gebruiker" :disabled="(appointment.user == null)"></v-select>
+                    </div>
+                </div>
+                <div class="mb-2 row">
                     <label class="col-md-12 mb-1">Beschrijving</label>
                     <div class="col-md-12">
                         <textarea v-model="appointment.description" class="form-control" ></textarea>
                     </div>
                 </div>
-                <div class="mb-3 row">
+                <div class="mb-2 row">
                     <label class="col-md-12 mb-1">Behandelingen</label>
                     <div class="col-md-12">
                         <div v-for="(treatment, index) in appointment.treatments" :key="index" class="mb-1">
@@ -29,8 +35,13 @@
                     </div>
                 </div>
 
-                <div class="mb-3 row">
+                <div class="mb-2 row">
                     <label class="col-md-12 mb-1">Tijden</label>
+                    <label class="col-md-12 fa-sm">start</label>
+                    <div class="col-md-12">
+                      <DatePicker type="datetime" :minute-step="15" format="D-M-Y HH:mm" v-model="appointment.start" class="w-100" disabled />
+                    </div>
+                    <label class="col-md-12 fa-sm mt-1">end</label>
                     <div class="col-md-12">
                       <DatePicker type="datetime" :minute-step="15" format="D-M-Y HH:mm" v-model="appointment.start" class="w-100" disabled />
                     </div>
@@ -74,6 +85,7 @@ import 'vue-select/dist/vue-select.css';
     data() {
       return {
         users: [],
+        dentists: [],
         treatments: [],
 
         calendarOptions: {
@@ -86,7 +98,8 @@ import 'vue-select/dist/vue-select.css';
         appointment: {
             start: null,
             end: null,
-            user_id: null,
+            user: null,
+            dentist: null,
             description: "",
             treatments: [
                 { treatment_id: null, }
@@ -94,14 +107,6 @@ import 'vue-select/dist/vue-select.css';
         }
       }
     },
-    // async asyncData () {
-    //   const { data: projects } = await axios.get('/api/projects')
-  
-    //   return {
-    //     projects
-    //   }
-    // },
-  
     metaInfo () {
       return { title: "Kalender" }
     },
@@ -109,6 +114,7 @@ import 'vue-select/dist/vue-select.css';
         const self = this;
         self.getAppointments();
         self.getUsers();
+        self.getDentists();
         self.getTreatments();
     },
     methods: {
@@ -146,6 +152,25 @@ import 'vue-select/dist/vue-select.css';
             self.users = users;
         }
       },
+      async getDentists() {
+        const self = this
+
+        var response = await self.$https.get('/api/users?role_id=2');
+        var users = response.data;
+        if (users)
+        {
+            users.forEach(user => {
+                user.name = user.firstname + " " + (user.middlename ? user.middlename + " " : "") + user.lastname;
+            });
+
+            self.dentists = users;
+        }
+      },  
+      changeUser() {
+        const self = this
+
+        console.log("changeuser", self.appointment.user);
+      },
       addTreatment() {
         const self = this 
 
@@ -154,7 +179,7 @@ import 'vue-select/dist/vue-select.css';
       handleDateclick(event) {
         const self = this;
 
-        if (self.appointment.user_id == null)
+        if (self.appointment.user == null)
         {
           return self.$swal.fire({
               icon: 'error',

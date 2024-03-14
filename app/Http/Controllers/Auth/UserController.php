@@ -18,10 +18,15 @@ class UserController extends Controller
         return response()->json($request->user());
     }
 
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        $users = User::all(); 
-        return response()->json($users);
+        $users = User::with("role"); 
+
+        if ($request->has('role_id')) {
+            $users->where("role_id", $request->role_id);
+        }
+        $users = $users->get();
+        return response()->json( $users );
     }
 
     public function store(Request $request): RedirectResponse
