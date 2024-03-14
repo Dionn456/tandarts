@@ -14,7 +14,8 @@ class AddressController extends Controller
      */
     public function index()
     {
-        //
+        $address = Address::all(); 
+        return response()->json($address);
     }
 
     /**

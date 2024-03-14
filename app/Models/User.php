@@ -56,6 +56,7 @@ class User extends Authenticatable implements JWTSubject //, MustVerifyEmail
 
     protected $with = [
         'role',
+        'address'
     ];
 
     /**
@@ -84,6 +85,11 @@ class User extends Authenticatable implements JWTSubject //, MustVerifyEmail
     public function role()
     {
         return $this->hasOne(Role::class, "id", "role_id");
+    }
+
+    public function address()
+    {
+        return $this->hasOne(Role::class, "id", "address_id");
     }
 
     /**

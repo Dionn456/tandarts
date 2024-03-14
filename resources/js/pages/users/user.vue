@@ -34,11 +34,20 @@
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <div class="form-group">
-                        <label class="fw-bold">Naam</label>
-                        <input type="text" class="form-control mb-3 diss" v-model="user.firstname" />
-                    </div>
-
+                    <label class="fw-bold">Postcode</label>
+                    <input type="text" class="form-control mb-3 diss" v-model="address.zip_code" />
+                </div>
+                <div class="form-group">
+                    <label class="fw-bold">Plaats</label>
+                    <input type="text" class="form-control mb-3 diss" v-model="address.city" />
+                </div>
+                <div class="form-group">
+                    <label class="fw-bold">Straat</label>
+                    <input type="text" class="form-control mb-3 diss" v-model="address.street" />
+                </div>
+                <div class="form-group">
+                    <label class="fw-bold">Nummer</label>
+                    <input type="text" class="form-control mb-3 diss" v-model="address.number" />
                 </div>
             </div>
             <div class="flex justify-content-center mt-3">
@@ -56,12 +65,14 @@ export default {
         return {
             user: {},
             roles: [],
+            address: [],
         };
     },
     mounted() {
         const self = this
         self.fetchUser(self.$route.params.id);
         self.getRoles();
+        self.fetchUserAdress();
         //   self.getStatus();
         //   self.getRooms();
     },
@@ -70,8 +81,13 @@ export default {
         fetchUser(userId) {
             const self = this;
             self.$https.get(`/api/users/${userId}`).then(async (response) => {
-                var user = response.data;
-                self.user = user;
+                self.user = response.data;
+            });
+        },
+        fetchUserAdress() {
+            const self = this;
+            self.$https.get('api/address').then(async (response) => {
+                self.address = response.data;
             });
         },
         // Fetch role of the user.

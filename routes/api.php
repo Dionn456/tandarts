@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AddressController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\OAuthController;
@@ -31,6 +32,8 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('users', [UserController::class, 'index']);
     Route::post('users', [UserController::class, 'store']);
     Route::get('users/{userId}', [UserController::class, 'getUser']);
+
+    Route::get('address', [AddressController::class, 'index']);
 
     Route::get('roles', [RoleController::class, 'index']);
 
