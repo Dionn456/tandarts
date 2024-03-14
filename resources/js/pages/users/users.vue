@@ -6,9 +6,7 @@
             </div>
             <div class="col d-flex justify-content-end align-items-center">
                 <button type="button" class="btn btn-primary" @click="openModal()">Patiënt toevoegen</button>
-                <Modal v-show="visible" @close="close" class="flex justify-content-center align-content-center">
-                    <addUser :showModal="visible" />
-                </Modal>
+                <addUser class="flex justify-content-center align-content-center" />
             </div>
 
         </div>
@@ -71,10 +69,8 @@ export default {
     },
     methods: {
         openModal() {
-            this.visible = true;
-        },
-        close() {
-            this.visible = false;
+            const self = this;
+            self.$modal.show("add-user");
         },
         fetchUser() {
             const self = this;

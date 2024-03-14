@@ -1,10 +1,10 @@
 <template>
-    <transition name="modal-fade">
-        <div class="modal-backdrop">
-            <div class="modal" role="dialog" aria-labelledby="modalTitle" aria-describedby="modalDescription">
+    <modal name="add-user" height="437">
+        <div class="">
+            <div>
                 <header class="modal-header" id="modalTitle">
                     <slot name="header">Patiënt toevoegen</slot>
-                    <button type="button" class="close-btn" @click="close" aria-label="Close Modal">x</button>
+                    <button type="button" class="close-btn" @click="close()">x</button>
                 </header>
 
                 <main class="modal-body" id="modalDescription">
@@ -27,12 +27,12 @@
                 </footer>
             </div>
         </div>
-    </transition>
+    </modal>
 </template>
 
 <script>
 export default {
-    name: "Modal",
+    name: 'add-user',
     data() {
         return {
             user: {
@@ -44,7 +44,8 @@ export default {
     },
     methods: {
         close() {
-            this.$emit("close");
+            const self = this;
+            self.$modal.hide("add-user");
         },
         addUser() {
             const self = this;

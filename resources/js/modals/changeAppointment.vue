@@ -5,8 +5,6 @@
           <div>
             Hier kun je een datum selecteren & een kamer selecteren
           </div>
-
-  
         </card>
   
       </div>
