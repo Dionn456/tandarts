@@ -169,7 +169,17 @@ import 'vue-select/dist/vue-select.css';
       changeUser() {
         const self = this
 
-        console.log("changeuser", self.appointment.user);
+        if (self.appointment.user == null)
+        {
+          self.appointment.dentist = null; 
+          return;
+        } 
+
+        // if user is selected select the default dentist of the user.
+        var dentist_id = self.appointment.user.users.find((user) => user.role_id == 2);
+        var dentist_id = (dentist_id != null) ? dentist_id.link_user_id : null;
+        var dentist =  self.dentists.find((user) => user.id == dentist_id);
+        self.appointment.dentist = dentist ? dentist : null;
       },
       addTreatment() {
         const self = this 
