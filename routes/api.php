@@ -44,6 +44,8 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('room', [RoomController::class, 'store']);
     Route::get('rooms', [RoomController::class, 'index']);
     Route::delete('room/{roomId}', [RoomController::class, 'destroy']);
+    Route::get('room/{roomId}', [RoomController::class, 'getRoom']);
+    Route::post('room/{roomId}', [RoomController::class, 'updateRoom']);
 
     Route::patch('settings/profile', [ProfileController::class, 'update']);
     Route::patch('settings/password', [PasswordController::class, 'update']);

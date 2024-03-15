@@ -9,7 +9,7 @@
                 </div>
                 <div class="form-group">
                     <label class="fw-bold">Tussenvoegsel</label>
-                    <input type="text" class="form-control mb-3 diss" v-model="user.lastname" />
+                    <input type="text" class="form-control mb-3 diss" v-model="user.middlename" />
                 </div>
                 <div class="form-group">
                     <label class="fw-bold">Achternaam</label>
@@ -96,7 +96,14 @@ export default {
         updateUser(userId) {
             const self = this;
             self.$https.post(`/api/users/${userId}`, self.user);
-            self.$router.push('/users');
+            self.$swal.fire({
+                icon: 'success',
+                title: 'Gelukt!',
+                text: "Gebruiker aangepast.",
+                timer: 3000
+            }).then(() => {
+                self.$router.push('/users');
+            });
         },
     },
     computed: {

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Room;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
@@ -75,9 +76,16 @@ class RoomController extends Controller
      * @param  \App\Models\Room  $room
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Room $room)
+    public function updateRoom(Request $request): JsonResponse
     {
-        //
+        $room = Room::find($request->id);
+
+        $room->name = $request->name;
+        $room->floor = $request->floor;
+        $room->number = $request->number;   
+        $room->save();
+
+        return response()->json($room);
     }
 
     /**
@@ -92,5 +100,11 @@ class RoomController extends Controller
         $room->delete();
 
         return response()->json(['message' => 'Room deleted successfully']);
+    }
+
+    public function getRoom($roomId): JsonResponse
+    {
+        $room = Room::where('id', $roomId)->first();
+        return response()->json($room);
     }
 }
