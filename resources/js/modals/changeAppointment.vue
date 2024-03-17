@@ -3,21 +3,27 @@
     <div class="p-1">
       <card :title="moment(date).format('LL')" class="m-1">
         <div>
-          <div class="form-group">
-            <label for="room">Kamer</label>
-            <select id="room" v-model="appointment.roomId" class="form-control w-100 diss mb-4" :disabled="loading">
-              <option value="">Selecteer een kamer</option>
-              <option v-for="room in rooms" :key="room.id" :value="room.id">{{ room.name }}</option>
-            </select>
+          <div class="mb-2 row">
+            <label class="col-md-12 mb-1">Tijden</label>
+            <label class="col-md-12 fa-sm">start</label>
+            <div class="col-md-12">
+              <DatePicker type="time" :time-picker-options="{start: '9:00', step: '00:10',end: '15:00'}" format="HH:mm" v-model="start" class="w-100" @change="updateMinEndTime()" />
+            </div>
+            <label class="col-md-12 fa-sm mt-1">end</label>
+            <div class="col-md-12">
+              <DatePicker type="time" :minute-step="15" format="HH:mm" v-model="end" class="w-100" disabled />
+            </div>
           </div>
-          <div class="form-group">
-            <label for="start-time">Start Time</label>
-            <DatePicker id="start-time" type="time" :minute-step="5" format="HH:mm" v-model="appointment.start" class="w-100 diss mb-2" @change="updateMinEndTime" />
+          <div>
+            <label>Afspraken</label>
+            <div v-for="event in events" :key="event.id" class="row">
+              <label class="col-md-12">
+              Tijden {{ moment(event.start).format('HH:mm') }} - {{ moment(event.end).format('HH:mm') }}
+              </label>
+            </div>
           </div>
-          <div class="form-group">
-            <label for="end-time">End Time</label>
-            <DatePicker id="end-time" type="time" :minute-step="5" format="HH:mm" v-model="appointment.end" :disabled="!appointment.start" class="w-100 diss" />
-          </div>
+          
+          
         </div>
       </card>
     </div>
@@ -36,7 +42,10 @@ export default {
     return {
       loading: true,
       rooms: [],
+      events: [],
       date: null,
+      start: null,
+      end: null,
     };
   },
   props: {
@@ -45,29 +54,40 @@ export default {
     },
   },
   async beforeMount() {
-    await this.getRooms();
     this.loading = false;
   },
   methods: {
-    show(event) {
-      this.date = event.date;
-      this.$modal.show("change-appointment");
-    },
-    async getRooms() {
-      const response = await this.$https.get('/api/rooms');
-      this.rooms = response.data || [];
+    show(event, events = []) {
+      const self = this
+      self.date = event.date;
+      self.events = events;
+
+      console.log(self.events);
+      self.$modal.show("change-appointment");
     },
     navigateTo(name, id = null) {
       if (id) this.$router.push({ name, params: { id } });
       else this.$router.push({ name });
     },
     updateMinEndTime() {
-      if (this.appointment.start) {
-        const startTime = new Date(this.appointment.start);
-        startTime.setMinutes(startTime.getMinutes() + 5);
-        this.appointment.end = startTime;
+      const self = this;
+      if (self.start) {
+        console.log( self.start)
+
+        const startTime = new Date(self.start);
+        console.log(startTime, self.start)
+        startTime.setMinutes(startTime.getMinutes() + self.calculateTotalDuration());
+        self.end = startTime;
       }
-    }
+    },
+    calculateTotalDuration() {
+      const self = this
+      var duration = 0;
+      self.appointment.treatments.forEach(treatment => {
+        duration += treatment.treatment ? treatment.treatment.duration : 0;
+      });
+      return duration;
+    },
   }
 }
 </script>

@@ -1,6 +1,6 @@
 <template>
     <div>
-      <changeAppointment ref="change" :appointment="appointment" @finished="getAppointments" />
+      <changeAppointment ref="change" :appointment="appointment" />
       <!-- <viewAppointment ref="view" /> -->
       <div class="row">
         <div class="col-lg-4">
@@ -27,7 +27,7 @@
                     <label class="col-md-12 mb-1">Behandelingen</label>
                     <div class="col-md-12">
                         <div v-for="(treatment, index) in appointment.treatments" :key="index" class="mb-1">
-                            <v-select  :options="treatments" v-model="treatment.treatment_id" label="name" placeholder="Selecteer behandeling"></v-select>
+                            <v-select  :options="treatments" v-model="treatment.treatment" label="name" placeholder="Selecteer behandeling"></v-select>
                         </div>
                     </div>
                     <div class="col-md-12 mt-1">
@@ -102,7 +102,7 @@ import 'vue-select/dist/vue-select.css';
             dentist: null,
             description: "",
             treatments: [
-                { treatment_id: null, }
+                { treatment: null, }
             ],
         }
       }
@@ -121,7 +121,7 @@ import 'vue-select/dist/vue-select.css';
       async getAppointments() {
         const self = this
   
-        var response = [] //await self.$https.get('/api/appointments');
+        var response = await self.$https.get('/api/appointments');
         var appointments = response.data;
         if (appointments)
         {
@@ -184,7 +184,7 @@ import 'vue-select/dist/vue-select.css';
       addTreatment() {
         const self = this 
 
-        self.appointment.treatments.push({treatment_id: null}); 
+        self.appointment.treatments.push({treatment: null}); 
       },
       handleDateclick(event) {
         const self = this;
@@ -208,7 +208,24 @@ import 'vue-select/dist/vue-select.css';
           });
         }
 
-        self.$refs.change.show(event);
+        if (self.appointment.dentist == null)
+        {
+          return self.$swal.fire({
+              icon: 'error',
+              title: 'Fout!',
+              text: "Geen tandarts geselecteerd!",
+              timer: 10000
+          });
+        }
+
+        console.error('dayclick', event)
+
+        var events = self.filterEventsDay(event.date);
+        self.$refs.change.show(event, events);
+      },
+      filterEventsDay(date, dentist) {
+        const self = this;
+        return self.calendarOptions.events.filter((event) => (new Date(event.start).setHours(0, 0, 0, 0) == new Date(date).setHours(0, 0, 0, 0)) && event.dentist.user_id == self.appointment.dentist.id)
       },
       handleEventClick(event) {
         const self = this;

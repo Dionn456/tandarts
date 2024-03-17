@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AddressController;
+use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\OAuthController;
@@ -40,6 +41,8 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('roles', [RoleController::class, 'index']);
 
     Route::get('treatments', [TreatmentController::class, 'index']);
+
+    Route::get('appointments', [AppointmentController::class, 'index']);
 
     Route::post('room', [RoomController::class, 'store']);
     Route::get('rooms', [RoomController::class, 'index']);
