@@ -43,6 +43,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('treatments', [TreatmentController::class, 'index']);
 
     Route::get('appointments', [AppointmentController::class, 'index']);
+    Route::delete('appointment/{appointmentId}', [AppointmentController::class, 'destroy']);
 
     Route::post('room', [RoomController::class, 'store']);
     Route::get('rooms', [RoomController::class, 'index']);

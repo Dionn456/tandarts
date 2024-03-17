@@ -30,6 +30,11 @@
           </li>
           <li v-if="user.role_id !== 4" class="nav-item">
             <router-link :to="{ name: 'appointments' }" class="nav-link" active-class="active">
+              Afspraak maken
+            </router-link>
+          </li>
+          <li v-if="user.role_id !== 4" class="nav-item">
+            <router-link :to="{ name: 'viewAppointments' }" class="nav-link" active-class="active">
               Afspraken
             </router-link>
           </li>
