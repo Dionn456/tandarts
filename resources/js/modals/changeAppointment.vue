@@ -7,7 +7,7 @@
             <label class="col-md-12 mb-1">Tijden</label>
             <label class="col-md-12 fa-sm">start</label>
             <div class="col-md-12">
-              <DatePicker type="time" :time-picker-options="{start: '9:00', step: '00:10',end: '15:00'}" format="HH:mm" v-model="start" class="w-100" @change="updateMinEndTime()" />
+              <DatePicker type="time" :time-picker-options="{start: '9:00', step: '00:10',end: '17:00'}" :disabled-time="disableTime" format="HH:mm" v-model="start" class="w-100" @change="updateMinEndTime()" />
             </div>
             <label class="col-md-12 fa-sm mt-1">end</label>
             <div class="col-md-12">
@@ -79,6 +79,21 @@ export default {
         startTime.setMinutes(startTime.getMinutes() + self.calculateTotalDuration());
         self.end = startTime;
       }
+    },
+    disableTime(date) {
+      const self = this
+      
+      var disable = false;
+      self.events.forEach(event => {
+        var start = new Date(event.start);
+        var end = new Date(event.end);
+        if (date >= start.setMinutes(start.getMinutes() - 10) && date <= end.setMinutes(end.getMinutes() + 10)) {
+          disable = true;
+        }
+      });
+
+      return disable;
+
     },
     calculateTotalDuration() {
       const self = this
