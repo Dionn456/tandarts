@@ -1,65 +1,86 @@
 <template>
-    <modal name="change-appointment" height="477">
-      <div class="p-1">
-        <card :title="moment(date).format('LL')" class="m-1">
-          <div>
-            Hier kun je een datum selecteren & een kamer selecteren
+  <modal name="change-appointment" height="477">
+    <div class="p-1">
+      <card :title="moment(date).format('LL')" class="m-1">
+        <div>
+          <div class="form-group">
+            <label for="room">Kamer</label>
+            <select id="room" v-model="appointment.roomId" class="form-control w-100 diss mb-4" :disabled="loading">
+              <option value="">Selecteer een kamer</option>
+              <option v-for="room in rooms" :key="room.id" :value="room.id">{{ room.name }}</option>
+            </select>
           </div>
-        </card>
-  
-      </div>
-    </modal>
-  </template>
-  <script>
+          <div class="form-group">
+            <label for="start-time">Start Time</label>
+            <DatePicker id="start-time" type="time" :minute-step="5" format="HH:mm" v-model="appointment.start" class="w-100 diss mb-2" @change="updateMinEndTime" />
+          </div>
+          <div class="form-group">
+            <label for="end-time">End Time</label>
+            <DatePicker id="end-time" type="time" :minute-step="5" format="HH:mm" v-model="appointment.end" :disabled="!appointment.start" class="w-100 diss" />
+          </div>
+        </div>
+      </card>
+    </div>
+  </modal>
+</template>
 
-  
-    export default {
-      name: 'change-appointment',
-      components: {  },
-      data: () => ({
-        loading: true,
-        rooms: [],
-        date: null,
-      }),
-      props: {
-        appointment: {
-          type: Object,
-        },
-      },
-      async beforeMount() {
-        const self = this
-        self.loading = true;
-        await Promise.all([
-          self.getRooms()
-        ]);
-        self.loading = false;
-      },
-      methods: {
-        show(event) {
-          const self = this;
-        
-          self.date = event.date;
-          self.$modal.show("change-appointment");
-        },
-        async getRooms() {
-          const self = this
-  
-          var response = await self.$https.get('/api/rooms');
-          var rooms = response.data;
-          if (rooms)
-          {
-            self.rooms = rooms;
-          }
-        },
-        navigateTo(name, id = null) {
-          const self = this
-          if (id) self.$router.push({ name: name, params: {id: id}  });
-          else self.$router.push({ name: name  });
-        },
+<script>
+import DatePicker from 'vue2-datepicker';
+
+export default {
+  name: 'change-appointment',
+  components: {
+    DatePicker
+  },
+  data() {
+    return {
+      loading: true,
+      rooms: [],
+      date: null,
+    };
+  },
+  props: {
+    appointment: {
+      type: Object,
+    },
+  },
+  async beforeMount() {
+    await this.getRooms();
+    this.loading = false;
+  },
+  methods: {
+    show(event) {
+      this.date = event.date;
+      this.$modal.show("change-appointment");
+    },
+    async getRooms() {
+      const response = await this.$https.get('/api/rooms');
+      this.rooms = response.data || [];
+    },
+    navigateTo(name, id = null) {
+      if (id) this.$router.push({ name, params: { id } });
+      else this.$router.push({ name });
+    },
+    updateMinEndTime() {
+      if (this.appointment.start) {
+        const startTime = new Date(this.appointment.start);
+        startTime.setMinutes(startTime.getMinutes() + 5);
+        this.appointment.end = startTime;
       }
-      
     }
-  </script>
-  <style>
-    
-  </style>   
+  }
+}
+</script>
+
+<style>
+/* fix focus */
+.diss:focus {
+    transform: none;
+    box-shadow: none;
+    outline: none;
+}
+
+.diss {
+    border-radius: 7px;
+}
+</style>

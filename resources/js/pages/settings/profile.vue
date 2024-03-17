@@ -46,7 +46,7 @@ export default {
 
   data: () => ({
     form: new Form({
-      name: '',
+      firstname: '',
       email: ''
     })
   }),

@@ -189,6 +189,15 @@ import 'vue-select/dist/vue-select.css';
       handleDateclick(event) {
         const self = this;
 
+        if (new Date(event.date) < new Date().setHours(0, 0, 0, 0)) {
+          return self.$swal.fire({
+            icon: 'error',
+            title: 'Fout!',
+            text: "Je kunt geen afspraak maken in het verleden!",
+            timer: 10000
+          });
+        }
+
         if (self.appointment.user == null)
         {
           return self.$swal.fire({
