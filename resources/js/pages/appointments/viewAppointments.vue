@@ -96,19 +96,31 @@ export default {
         },
     },
     computed: {
-        /* Filtering users based on search string */
-        filteredUsers() {
-            const self = this;
+    /* Filtering users based on search string and user role */
+    filteredUsers() {
+        const self = this;
+        if (self.user.role_id === 4) { // Check if user has the role of patient
+            // Filter appointments for the current logged-in patient
+            return self.appointments.filter(appointment => {
+                return appointment.patient && appointment.patient.user.id === self.user.id &&
+                    (appointment.start.toLowerCase().includes(self.search.toLowerCase()) ||
+                    appointment.end.toLowerCase().includes(self.search.toLowerCase()) ||
+                    appointment.description.toLowerCase().includes(self.search.toLowerCase()));
+            });
+        } else {
+            // For other roles, show all appointments
             return self.appointments.filter(appointment => {
                 return appointment.start.toLowerCase().includes(self.search.toLowerCase()) ||
                     appointment.end.toLowerCase().includes(self.search.toLowerCase()) ||
                     appointment.description.toLowerCase().includes(self.search.toLowerCase());
             });
-        },
-        ...mapGetters({
-            user: 'auth/user'
-        }),
-    }
+        }
+    },
+    ...mapGetters({
+        user: 'auth/user'
+    }),
+}
+
 }
 </script>
 

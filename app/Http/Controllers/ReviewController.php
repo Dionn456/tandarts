@@ -35,7 +35,14 @@ class ReviewController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $review = new Review();
+        $review->user_id = $request->patientId;
+        $review->appointment_id = $request->appointmentId;
+        $review->rating = $request->rating;
+        $review->description = $request->comment;
+        $review->save();
+
+        return redirect()->back();
     }
 
     /**
