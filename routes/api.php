@@ -44,6 +44,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('treatments', [TreatmentController::class, 'index']);
 
     Route::post('review', [ReviewController::class, 'store']);
+    Route::get('reviews', [ReviewController::class, 'index']);
 
     Route::get('appointments', [AppointmentController::class, 'index']);
     Route::post('appointment', [AppointmentController::class, 'store']);

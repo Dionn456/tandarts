@@ -96,7 +96,7 @@ export default {
                     text: "Review geplaatst!.",
                     timer: 3000
                 }).then(() => {
-                    window.location.href = '/enquete';
+                    window.location.href = '/viewAppointments';
                 });
             });
         },
