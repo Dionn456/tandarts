@@ -6,28 +6,27 @@
                     placeholder="Zoeken...">
             </div>
         </div>
-
         <table id="dtBasicExample" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
             <thead>
                 <tr>
                     <th class="th-sm">Begin</th>
                     <th class="th-sm">Einde</th>
-                    <th class="th-sm">Opmerking</th>
+                    <th class="th-sm">Patiënt</th>
+                    <th class="th-sm">Tandarts</th>
                     <th class="th-sm text-center">Acties</th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="appointment in filteredUsers" :key="appointment.id">
-                    <td class="col3">{{ appointment.start }}</td>
-                    <td class="col-3">{{ appointment.end }}</td>
-                    <td class="col-3">{{ appointment.dentist.user.firstname }}</td>
+                    <td class="col-2">{{ appointment.start }}</td>
+                    <td class="col-2">{{ appointment.end }}</td>
+                    <td class="col-2"><span v-if="appointment.patient">{{ appointment.patient.user.firstname }}</span></td>
+                    <td class="col-2"><span v-if="appointment.dentist">{{ appointment.dentist.user.firstname }}</span></td>
                     <td class="col-1">
-                        <div class="d-flex justify-content-center gap-3">
-                            <a :href="'/appointment/' + appointment.id" class="float-end">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                    stroke-width="1.5" stroke="orange" width="20">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                        <div v-if="user.role_id !== 4" class="d-flex justify-content-center gap-3">
+                            <a :href="'/viewAppointment/' + appointment.id" class="float-end">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="orange" width="20">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
                                 </svg>
                             </a>
                             <a @click="removeAppointment(appointment.id)" class="float-end">
@@ -38,6 +37,9 @@
                                 </svg>
                             </a>
                         </div>
+                        <div class="d-flex justify-content-center gap-3" v-else>
+                            <a :href="'/enquete/' + appointment.id">Enquête</a>
+                        </div>
                     </td>
                 </tr>
             </tbody>
@@ -45,7 +47,10 @@
     </div>
 </template>
 
+
 <script>
+import { mapGetters } from 'vuex'
+
 
 export default {
     data() {
@@ -99,7 +104,10 @@ export default {
                     appointment.end.toLowerCase().includes(self.search.toLowerCase()) ||
                     appointment.description.toLowerCase().includes(self.search.toLowerCase());
             });
-        }
+        },
+        ...mapGetters({
+            user: 'auth/user'
+        }),
     }
 }
 </script>

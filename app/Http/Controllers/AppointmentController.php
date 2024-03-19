@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Appointment;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class AppointmentController extends Controller
@@ -85,5 +86,13 @@ class AppointmentController extends Controller
         $appointment->delete();
 
         return response()->json(['message' => 'Appointment deleted successfully']);
+    }
+
+    public function getAppointment($appointmentId): JsonResponse
+    {
+        $appointment = Appointment::where('id', $appointmentId)->first();
+
+        
+        return response()->json($appointment);
     }
 }

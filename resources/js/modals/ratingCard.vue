@@ -1,49 +1,50 @@
 <template>
-    <div class="container my-5">
-        <div class="card mx-auto"
-            style="max-width: 374px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
-            <div class="card-body">
-                <h5 class="card-title text-center">{{ user.firstname }}</h5>
-                <div class="row align-items-center mb-3">
-                    <div class="col">
-                        <p class="m-0 text-center">Birth Date: {{ user.birth_date }}</p>
-                    </div>
-                </div>
-                <hr>
-
-                <div class="row mb-3" v-for="(appointment, index) in appointments" :key="index">
-                    <div class="col">
-                        <p class="m-0">Tandarts: {{ appointment.dentist.user.firstname }}</p>
-                        <p class="m-0">Assistent: {{ appointment.assistent.user.firstname }}</p>
-                        <p class="m-0">Datum Behandeling: {{ appointment.start }} tot {{ appointment.end }}</p>
-                        <p class="m-0">Behandeling: {{ appointment }}</p>
-                        <div class="form-group">
-                            <label class="col-sm-2 col-form-label">Beoordeling:</label>
-                            <div class="col-sm-10">
+    <div class="container mt-5">
+        <h1 class="text-center mb-5">Afspraak Informatie</h1>
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <h5 class="fw-bold">Enquête:</h5>
+                            <hr class="my-2">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span>Patiënt:</span>
+                                <span>{{ appointments.patient.user.firstname }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span>Geboortedatum:</span>
+                                <span>{{ appointments.patient.user.birth_date }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span>Tandarts:</span>
+                                <span>{{ appointments.dentist.user.firstname }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span>Datum behandeling:</span>
+                                <span>{{ appointments.start }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span>Behandeling:</span>
+                                <span v-for="treatment in appointments.treatments" :key="treatment.id">{{ treatment.treatment.name }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span>Beoordeling:</span>
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input diss" type="radio" :id="'good' + index" :name="'beoordeling' + index"
-                                        value="goed" v-model="appointment.selectedBeoordeling">
-                                    <label class="form-check-label" :for="'goed' + index">Goed</label>
+                                    <input class="form-check-input diss" type="radio" id="good" name="rating" value="good">
+                                    <label class="form-check-label" for="good">Goed</label>
                                 </div>
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input diss" type="radio" :id="'bad' + index" :name="'beoordeling' + index"
-                                        value="slecht" v-model="appointment.selectedBeoordeling">
-                                    <label class="form-check-label" :for="'slecht' + index">Slecht</label>
+                                    <input class="form-check-input diss" type="radio" id="bad" name="rating" value="bad">
+                                    <label class="form-check-label" for="bad">Slecht</label>
                                 </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="opmerking">Opmerking:</label>
-                            <textarea type="text" class="form-control diss" :id="'opmerking' + index"
-                                v-model="appointment.opmerking"></textarea>
+                            <div class="d-flex justify-content-between align-items-center">0
+                                <span>Opmerking:</span>
+                                <textarea name="" id="" cols="30" rows="3"></textarea>
+                            </div>
                         </div>
                     </div>
-                </div>
-
-                <hr>
-
-                <div class="text-center">
-                    <button type="button" class="btn btn-primary">Versturen</button>
                 </div>
             </div>
         </div>
@@ -52,31 +53,27 @@
 
 
 <script>
-import { mapGetters } from 'vuex'
-
 export default {
     data() {
         return {
-            selectedBeoordeling: 'goed',
-            opmerking: '',
             appointments: [],
         }
     },
-    props: {
-        user: Object,
-        loading: Boolean
-    },
-    computed: mapGetters({
-        user: 'auth/user'
-    }),
     mounted() {
         const self = this;
-        self.fetchDentist();
+        self.fetchData(self.$route.params.id);
     },
     methods: {
-        fetchDentist() {
+        fetchData(appointmentId) {
             const self = this;
-            self.$https.get('/api/appointments').then(response => self.appointments = response.data);
+            self.$https.get(`/api/appointment/${appointmentId}`)
+                .then(response => {
+                    self.appointments = response.data;
+                    console.log(self.appointments);
+                })
+                .catch(error => {
+                    console.error('Error fetching appointment:', error);
+                });
         },
     }
 }
@@ -93,13 +90,14 @@ export default {
 .diss {
     border-radius: 7px;
 }
+
 #good:checked {
     background-color: green;
-    border-color: green; 
+    border-color: green;
 }
+
 #bad:checked {
     background-color: red;
     border-color: red;
 }
-
 </style>
