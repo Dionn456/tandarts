@@ -43,6 +43,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('treatments', [TreatmentController::class, 'index']);
 
     Route::get('appointments', [AppointmentController::class, 'index']);
+    Route::post('appointment', [AppointmentController::class, 'store']);
 
     Route::post('room', [RoomController::class, 'store']);
     Route::get('rooms', [RoomController::class, 'index']);

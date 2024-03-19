@@ -14,7 +14,7 @@
                 <div class="mb-2 row">
                     <label class="col-md-12 col-form-label">Tandarts</label>
                     <div class="col-md-12">
-                        <v-select :options="dentists" v-model="appointment.dentist" label="name" placeholder="Selecteer gebruiker" :disabled="(appointment.user == null)"></v-select>
+                        <v-select :options="filterDentists" v-model="appointment.dentist" label="name" placeholder="Selecteer gebruiker" :disabled="(appointment.user == null)"></v-select>
                     </div>
                 </div>
                 <div class="mb-2 row">
@@ -43,11 +43,11 @@
                     </div>
                     <label class="col-md-12 fa-sm mt-1">end</label>
                     <div class="col-md-12">
-                      <DatePicker type="datetime" :minute-step="15" format="D-M-Y HH:mm" v-model="appointment.start" class="w-100" disabled />
+                      <DatePicker type="datetime" :minute-step="15" format="D-M-Y HH:mm" v-model="appointment.end" class="w-100" disabled />
                     </div>
                 </div>
                 <div class="row">
-                  <button type="button" class="btn btn-primary w-100" @click="addTreatment()">Afpsraak aanmaken</button>
+                  <button type="button" class="btn btn-primary w-100" @click="createAppointment()">Afpsraak aanmaken</button>
                     
                 </div>
 
@@ -217,8 +217,16 @@ import 'vue-select/dist/vue-select.css';
               timer: 10000
           });
         }
-
-        console.error('dayclick', event)
+        
+        if (self.appointment.treatments.filter(treatment => treatment.treatment != null) == 0)
+        {
+          return self.$swal.fire({
+              icon: 'error',
+              title: 'Fout!',
+              text: "Geen behandelingen geselecteerd!",
+              timer: 10000
+          });
+        }
 
         var events = self.filterEventsDay(event.date);
         self.$refs.change.show(event, events);
@@ -233,6 +241,79 @@ import 'vue-select/dist/vue-select.css';
   
         // self.$refs.view.show(event.event);
   
+      },
+      createAppointment() {
+        const self = this;
+
+        if (self.appointment.user == null)
+        {
+          return self.$swal.fire({
+              icon: 'error',
+              title: 'Fout!',
+              text: "Geen gebruiker geselecteerd!",
+              timer: 10000
+          });
+        }
+
+        if (self.appointment.dentist == null)
+        {
+          return self.$swal.fire({
+              icon: 'error',
+              title: 'Fout!',
+              text: "Geen tandarts geselecteerd!",
+              timer: 10000
+          });
+        }
+        
+        if (self.appointment.treatments.filter(treatment => treatment.treatment != null) == 0)
+        {
+          return self.$swal.fire({
+              icon: 'error',
+              title: 'Fout!',
+              text: "Geen behandelingen geselecteerd!",
+              timer: 10000
+          });
+        }
+
+        if (self.appointment.start == null)
+        {
+          return self.$swal.fire({
+              icon: 'error',
+              title: 'Fout!',
+              text: "Geen tijden geselecteerd!",
+              timer: 10000
+          });
+        }
+
+        self.$https.post('/api/appointment', self.appointment).then(response => {
+          self.$swal.fire({
+              icon: 'success',
+              title: 'Success!',
+              text: "Afspraak ingepland.",
+              timer: 3000
+          })
+          self.appointment.user = null;
+          self.appointment.dentist = null;
+          self.appointment.start = null;
+          self.appointment.end = null;
+          self.appointment.description = "";
+          self.appointment.treatments = [{ treatment: null }];
+          self.getAppointments();
+        });
+      },
+    },
+    computed: {
+      filterDentists() {
+        const self = this;
+
+        var dentists = self.dentists;
+
+        if (self.appointment.user !== null)
+        {
+          dentists = dentists.filter(dentist => dentist.id !== self.appointment.user.id);
+        }
+
+        return dentists;
       }
     }
   }

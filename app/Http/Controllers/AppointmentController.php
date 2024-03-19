@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Appointment;
+use App\Models\AppointmentTreatment;
+use App\Models\AppointmentUser;
 use Illuminate\Http\Request;
 
 class AppointmentController extends Controller
@@ -35,8 +37,58 @@ class AppointmentController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        //
+    {   
+        $appointment = new Appointment;
+        $appointment->start = date("Y-m-d H:i:s", strtotime(($request->start) ? $request->start : date("Y-m-d H:i:s")));
+        $appointment->end = date("Y-m-d H:i:s", strtotime(($request->end) ? $request->end : date("Y-m-d H:i:s")));
+        $appointment->description = $request->description;
+        $appointment->status_id = 1;
+        $appointment->room_id = 1;//$request->room_id;
+        $appointment->save(); 
+
+        foreach ($request->treatments as $treatment) {
+            $treatment = $treatment["treatment"];
+
+            if ($treatment != null) 
+            {
+                $aTreatment = new AppointmentTreatment;
+                $aTreatment->appointment_id = $appointment->id;
+                $aTreatment->treatment_id = $treatment["id"];
+                $aTreatment->price = $treatment["price"];
+                $aTreatment->save();
+            }
+        }
+
+        $patient = new AppointmentUser;
+        $patient->appointment_id = $appointment->id;
+        $patient->user_id = $request->user["id"];
+        $patient->role_id = 4;
+        $patient->save();
+
+        $dentist = new AppointmentUser;
+        $dentist->appointment_id = $appointment->id;
+        $dentist->user_id = $request->dentist["id"];
+        $dentist->role_id = 2;
+        $dentist->save();
+
+        
+
+        $getAssistent = array_filter($request->dentist["users"], function($user) {
+            if ($user["role_id"] == 3) return $user; 
+        });
+
+        if ($getAssistent != null)
+        {
+            $assistent = new AppointmentUser;
+            $assistent->appointment_id = $appointment->id;
+            $assistent->user_id = $getAssistent[0]["link_user_id"];
+            $assistent->role_id = 3;
+            $assistent->save();
+        }
+        
+
+
+        return $appointment;
     }
 
     /**
