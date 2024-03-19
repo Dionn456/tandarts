@@ -13,11 +13,6 @@
       <div id="navbar" class="collapse navbar-collapse">
         <ul class="navbar-nav ms-auto">
           <!-- Authenticated -->
-          <li v-if="user.role_id == 4" class="nav-item">
-            <router-link :to="{ name: 'enquete' }" class="nav-link" active-class="active">
-              Enquête
-            </router-link>
-          </li>
           <li v-if="user.role_id !== 4" class="nav-item">
             <router-link :to="{ name: 'rooms' }" class="nav-link" active-class="active">
               Kamers
@@ -28,7 +23,7 @@
               Gebruikers
             </router-link>
           </li>
-          <li v-if="user.role_id !== 4" class="nav-item">
+          <li v-if="user.role_id == 3" class="nav-item">
             <router-link :to="{ name: 'appointments' }" class="nav-link" active-class="active">
               Afspraak maken
             </router-link>
