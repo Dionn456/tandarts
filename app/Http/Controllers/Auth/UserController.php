@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Address;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\UserUser;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Hash;
@@ -32,6 +33,12 @@ class UserController extends Controller
         return response()->json( $users );
     }
 
+    public function guestIndex()
+    {
+        $users = User::with("role")->where("role_id", 2)->get();
+        return response()->json( $users);
+    } 
+
     public function store(Request $request): RedirectResponse
     {
         $user = new User();
@@ -42,6 +49,13 @@ class UserController extends Controller
         $user->role_id = '4';
         $user->phone = '06123456789';
         $user->save();
+
+        $useruser = new UserUser();
+        $useruser->user_id = $user->id;
+        $useruser->link_user_id = $request->dentist_id;
+        $useruser->role_id = $request->role_id;
+        $useruser->save();
+
 
         return redirect()->back();
     }

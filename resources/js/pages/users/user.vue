@@ -85,6 +85,8 @@ export default {
             const self = this;
             self.$https.get(`/api/users/${userId}`).then(async (response) => {
                 self.user = response.data;
+
+                if (self.user.address == null) self.user.address = {zip_code: "", city: "", city: "", street: ""};
             });
         },
         getRoles() {
