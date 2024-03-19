@@ -21,6 +21,8 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             UserSeeder::class,
             TreatmentSeeder::class,
+            StatusSeeder::class,
+            RoomSeeder::class,
         ]);
 
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');

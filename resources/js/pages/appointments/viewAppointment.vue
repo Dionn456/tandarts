@@ -53,6 +53,9 @@
                                 <span>{{ appointment.description }}</span>
                             </div>
                         </div>
+                        <div class="row">
+                            <button type="button" class="btn btn-primary w-100" @click="changeStatus()">Factureren</button>     
+                        </div>
                     </div>
                 </div>
             </div>
@@ -88,6 +91,18 @@ export default {
                     console.error('Error fetching appointment:', error);
                 });
         },
+        changeStatus() {
+            const self = this
+            self.$https.post('/api/appointment/'+ self.appointment.id +'/invoice').then(response => {
+                self.fetchAppointment(self.$route.params.id);
+                self.$swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: "Factuur verzonden.",
+                    timer: 3000
+                })
+            });
+        }
     },
 };
 </script>

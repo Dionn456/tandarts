@@ -47,7 +47,7 @@
                     </div>
                 </div>
                 <div class="row">
-                  <button type="button" class="btn btn-primary w-100" @click="createAppointment()">Afpsraak aanmaken</button>
+                  <button type="button" class="btn btn-primary w-100" @click="createAppointment()">Afspraak aanmaken</button>
                     
                 </div>
 

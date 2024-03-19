@@ -114,6 +114,18 @@ class AppointmentController extends Controller
         //
     }
 
+    public function invoice(Appointment $appointment)
+    {
+        /// invoice logic here 
+        /// ... send mail
+
+        /// change status
+        $appointment->status_id = 2;
+        $appointment->save();
+
+        return $appointment;
+    }
+
     /**
      * Update the specified resource in storage.
      *
