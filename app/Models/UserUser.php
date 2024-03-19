@@ -9,6 +9,12 @@ class UserUser extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'link_user_id',
+        'role_id',
+        'user_id'
+    ];
+
     protected $with = [
         'user',
         'role'

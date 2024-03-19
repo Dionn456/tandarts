@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\UserUser;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
 
 class RegisterController extends Controller
 {
@@ -39,7 +41,9 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => 'required|max:255',
+            'firstname' => 'required|max:255',
+            'lastname' => 'required|max:255',
+            'phone' => 'required|max:255',
             'email' => 'required|email:filter|max:255|unique:users',
             'password' => 'required|min:6|confirmed',
         ]);
@@ -48,12 +52,23 @@ class RegisterController extends Controller
     /**
      * Create a new user instance after a valid registration.
      */
-    protected function create(array $data): User
+    protected function create(array $data): array
     {
-        return User::create([
-            'name' => $data['name'],
+        $user = User::create([
+            'firstname' => $data['firstname'],
+            'lastname' => $data['lastname'],
+            'phone' => $data['phone'],
             'email' => $data['email'],
-            'password' => bcrypt($data['password']),
+            'role_id' => '4',
+            'password' => Hash::make($data['password']),
         ]);
+        
+        $userUser = UserUser::create([
+            'user_id' => $user->id,
+            'link_user_id' => $data['dentist_id'],
+            'role_id' => $data['role_id']
+        ]);
+        
+        return [$user, $userUser];
     }
 }

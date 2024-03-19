@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Appointment;
 use App\Models\AppointmentTreatment;
 use App\Models\AppointmentUser;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class AppointmentController extends Controller
@@ -131,8 +132,19 @@ class AppointmentController extends Controller
      * @param  \App\Models\Appointment  $appointment
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Appointment $appointment)
+    public function destroy($appointmentId)
     {
-        //
+        $appointment = Appointment::findOrFail($appointmentId);
+        $appointment->delete();
+
+        return response()->json(['message' => 'Appointment deleted successfully']);
+    }
+
+    public function getAppointment($appointmentId): JsonResponse
+    {
+        $appointment = Appointment::where('id', $appointmentId)->first();
+
+        
+        return response()->json($appointment);
     }
 }

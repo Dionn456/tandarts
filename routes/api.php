@@ -44,6 +44,8 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::get('appointments', [AppointmentController::class, 'index']);
     Route::post('appointment', [AppointmentController::class, 'store']);
+    Route::delete('appointment/{appointmentId}', [AppointmentController::class, 'destroy']);
+    Route::get('appointment/{appointmentId}', [AppointmentController::class, 'getAppointment']);
 
     Route::post('room', [RoomController::class, 'store']);
     Route::get('rooms', [RoomController::class, 'index']);
@@ -58,6 +60,8 @@ Route::group(['middleware' => 'auth:api'], function () {
 Route::group(['middleware' => 'guest:api'], function () {
     Route::post('login', [LoginController::class, 'login']);
     Route::post('register', [RegisterController::class, 'register']);
+
+    Route::get('guest/users', [UserController::class, 'guestIndex']);
 
     Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail']);
     Route::post('password/reset', [ResetPasswordController::class, 'reset']);

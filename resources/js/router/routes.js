@@ -18,9 +18,11 @@ export default [
   { path: '/users', name: 'users', component: page('users/users.vue') },
   { path: '/user/:id', name: 'user', component: page('users/user.vue') },
 
-  { path: '/enquete', name: 'enquete', component: page('enquete/enquete.vue') },
+  { path: '/enquete/:id', name: 'enquete', component: page('enquete/enquete.vue') },
 
   { path: '/appointments', name: 'appointments', component: page('appointments/appointments.vue') },
+  { path: '/viewAppointments', name: 'viewAppointments', component: page('appointments/viewAppointments.vue') },
+  { path: '/viewAppointment/:id', name: 'viewAppointment', component: page('appointments/viewAppointment.vue') },
 
   { path: '/home', name: 'home', component: page('home.vue') },
   {

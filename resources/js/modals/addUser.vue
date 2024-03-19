@@ -30,8 +30,8 @@
                     </div>
                     <div class="mb-3">
                         <label for="dentist" class="form-label">Tandarts</label>
-                        <select id="rol" class="form-control mb-3 diss" v-model="users.role_id">
-                            <option v-for="user in users" :key="user.id" :value="user.id">{{ user.firstname + " - " + user.role.name }}</option>
+                        <select id="rol" class="form-control mb-3 diss" v-model="user.role_id" @change="setDentistId">
+                            <option v-for="user in users" :key="user.id" :value="user.id">{{ user.firstname }}</option>
                         </select>
                     </div>
                 </main>
@@ -56,6 +56,7 @@ export default {
                 email: '',
                 password: '',
                 role_id: null,
+                dentist_id: null
             },
             users: [],
         };
@@ -65,6 +66,14 @@ export default {
         self.fetchUser();
     },
     methods: {
+        setDentistId() {
+            const selectedUserId = this.user.role_id;
+            const selectedUser = this.users.find(user => user.id === selectedUserId);
+            if (selectedUser && selectedUser.role_id === 2) {
+                this.user.dentist_id = selectedUser.id;
+            }
+        },
+
         close() {
             const self = this;
             self.$modal.hide("add-user");
