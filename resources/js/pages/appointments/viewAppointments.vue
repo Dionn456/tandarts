@@ -20,13 +20,17 @@
                 <tr v-for="appointment in filteredUsers" :key="appointment.id">
                     <td class="col-2">{{ appointment.start }}</td>
                     <td class="col-2">{{ appointment.end }}</td>
-                    <td class="col-2"><span v-if="appointment.patient">{{ appointment.patient.user.firstname }}</span></td>
-                    <td class="col-2"><span v-if="appointment.dentist">{{ appointment.dentist.user.firstname }}</span></td>
+                    <td class="col-2"><span v-if="appointment.patient">{{ appointment.patient.user.firstname }}</span>
+                    </td>
+                    <td class="col-2"><span v-if="appointment.dentist">{{ appointment.dentist.user.firstname }}</span>
+                    </td>
                     <td class="col-1">
                         <div v-if="user.role_id !== 4" class="d-flex justify-content-center gap-3">
                             <a :href="'/viewAppointment/' + appointment.id" class="float-end">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="orange" width="20">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="orange" width="20">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
                                 </svg>
                             </a>
                             <a @click="removeAppointment(appointment.id)" class="float-end">
@@ -38,7 +42,10 @@
                             </a>
                         </div>
                         <div class="d-flex justify-content-center gap-3" v-else>
-                            <a :href="'/enquete/' + appointment.id">Enquête</a>
+                            <div  v-if="!reviews.some(review => review.appointment_id === appointment.id)">
+                                <a :href="'/enquete/' + appointment.id">Enquête</a>
+                            </div>
+                                
                         </div>
                     </td>
                 </tr>
@@ -57,17 +64,24 @@ export default {
         return {
             search: '',
             appointments: [],
+            reviews: []
         };
     },
     mounted() {
         const self = this;
         self.fetchAppointments();
+        self.fetchReviews();
     },
     methods: {
         /* Fetching users from API when called */
         fetchAppointments() {
             const self = this;
             self.$https.get('/api/appointments').then(response => self.appointments = response.data);
+        },
+        /* Fetching users from API when called */
+        fetchReviews() {
+            const self = this;
+            self.$https.get('/api/reviews').then(response => self.reviews = response.data);
         },
         /* Confirming deletion of room and then sending delete request to API */
         removeAppointment(appointmentId) {
@@ -96,19 +110,31 @@ export default {
         },
     },
     computed: {
-        /* Filtering users based on search string */
+        /* Filtering users based on search string and user role */
         filteredUsers() {
             const self = this;
-            return self.appointments.filter(appointment => {
-                return appointment.start.toLowerCase().includes(self.search.toLowerCase()) ||
-                    appointment.end.toLowerCase().includes(self.search.toLowerCase()) ||
-                    appointment.description.toLowerCase().includes(self.search.toLowerCase());
-            });
+            if (self.user.role_id === 4) { // Check if user has the role of patient
+                // Filter appointments for the current logged-in patient
+                return self.appointments.filter(appointment => {
+                    return appointment.patient && appointment.patient.user.id === self.user.id &&
+                        (appointment.start.toLowerCase().includes(self.search.toLowerCase()) ||
+                            appointment.end.toLowerCase().includes(self.search.toLowerCase()) ||
+                            appointment.description.toLowerCase().includes(self.search.toLowerCase()));
+                });
+            } else {
+                // For other roles, show all appointments
+                return self.appointments.filter(appointment => {
+                    return appointment.start.toLowerCase().includes(self.search.toLowerCase()) ||
+                        appointment.end.toLowerCase().includes(self.search.toLowerCase()) ||
+                        appointment.description.toLowerCase().includes(self.search.toLowerCase());
+                });
+            }
         },
         ...mapGetters({
             user: 'auth/user'
         }),
     }
+
 }
 </script>
 

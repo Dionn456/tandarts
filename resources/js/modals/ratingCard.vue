@@ -26,23 +26,30 @@
                             </div>
                             <div class="d-flex justify-content-between align-items-center mb-1">
                                 <span>Behandeling:</span>
-                                <span v-for="treatment in appointments.treatments" :key="treatment.id">{{ treatment.treatment.name }}</span>
+                                <span v-for="treatment in appointments.treatments" :key="treatment.id">{{
+                                    treatment.treatment.name }}</span>
                             </div>
                             <div class="d-flex justify-content-between align-items-center mb-2">
                                 <span>Beoordeling:</span>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input diss" type="radio" id="good" name="rating" value="good">
-                                    <label class="form-check-label" for="good">Goed</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input diss" type="radio" id="bad" name="rating" value="bad">
-                                    <label class="form-check-label" for="bad">Slecht</label>
+                                <div>
+                                    <div class="form-check form-check-inline justify-content-end">
+                                        <input class="form-check-input diss" type="radio" id="good" name="rating"
+                                            value="goed" v-model="review.rating">
+                                        <label class="form-check-label" for="good">Goed</label>
+                                    </div>
+                                    <div class="form-check form-check-inline justify-content-end">
+                                        <input class="form-check-input diss" type="radio" id="bad" name="rating"
+                                            value="slecht" v-model="review.rating">
+                                        <label class="form-check-label" for="bad">Slecht</label>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="d-flex justify-content-between align-items-center">0
+
+                            <div class="d-flex justify-content-between align-items-center">
                                 <span>Opmerking:</span>
-                                <textarea name="" id="" cols="30" rows="3"></textarea>
+                                <textarea name="" id="" cols="40" rows="3" v-model="review.comment"></textarea>
                             </div>
+                            <button type="button" class="btn btn-primary px-4 diss" @click="addReview()">Aanmaken</button>
                         </div>
                     </div>
                 </div>
@@ -57,6 +64,10 @@ export default {
     data() {
         return {
             appointments: [],
+            review: {
+                rating: '',
+                comment: ''
+            },
         }
     },
     mounted() {
@@ -69,11 +80,25 @@ export default {
             self.$https.get(`/api/appointment/${appointmentId}`)
                 .then(response => {
                     self.appointments = response.data;
-                    console.log(self.appointments);
                 })
                 .catch(error => {
                     console.error('Error fetching appointment:', error);
                 });
+        },
+        addReview() {
+            const self = this;
+            self.review.patientId = self.appointments.patient.user.id;
+            self.review.appointmentId = self.appointments.id;
+            self.$https.post('/api/review', self.review).then(response => {
+                self.$swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: "Review geplaatst!.",
+                    timer: 3000
+                }).then(() => {
+                    window.location.href = '/viewAppointments';
+                });
+            });
         },
     }
 }

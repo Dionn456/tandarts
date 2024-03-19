@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\UserController;
 use App\Http\Controllers\Auth\VerificationController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\Settings\PasswordController;
 use App\Http\Controllers\Settings\ProfileController;
 use App\Http\Controllers\TreatmentController;
@@ -41,6 +42,9 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('roles', [RoleController::class, 'index']);
 
     Route::get('treatments', [TreatmentController::class, 'index']);
+
+    Route::post('review', [ReviewController::class, 'store']);
+    Route::get('reviews', [ReviewController::class, 'index']);
 
     Route::get('appointments', [AppointmentController::class, 'index']);
     Route::post('appointment', [AppointmentController::class, 'store']);
