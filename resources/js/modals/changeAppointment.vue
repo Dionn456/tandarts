@@ -14,8 +14,11 @@
               <DatePicker type="time" :minute-step="15" format="HH:mm" v-model="end" class="w-100" disabled />
             </div>
           </div>
+          <div class="row">
+            <button type="button" class="btn btn-primary w-100" @click="selectTimes()">Tijden selecteren</button>
+          </div>
           <div>
-            <label>Afspraken</label>
+            <label>Afspraken van <span v-if="appointment.dentist">{{ appointment.dentist.firstname }} {{ appointment.dentist.middlename }} {{ appointment.dentist.lastname }}</span></label>
             <div v-for="event in events" :key="event.id" class="row">
               <label class="col-md-12">
               Tijden {{ moment(event.start).format('HH:mm') }} - {{ moment(event.end).format('HH:mm') }}
@@ -61,9 +64,37 @@ export default {
       const self = this
       self.date = event.date;
       self.events = events;
+      self.start = null;
+      self.end = null;
 
-      console.log(self.events);
       self.$modal.show("change-appointment");
+    },
+    selectTimes() {
+      const self = this
+
+      if (self.start == null || self.end == null)
+      {
+        return self.$swal.fire({
+              icon: 'error',
+              title: 'Fout!',
+              text: "Geen tijd geselecteerd!",
+              timer: 10000
+          });
+      } 
+      
+      var date = new Date(self.date);
+      self.appointment.start = new Date(date.setHours(self.start.getHours(), self.start.getMinutes(), 0));;
+      self.appointment.end = new Date(date.setHours(self.end.getHours(), self.end.getMinutes(), 0));
+
+      self.$swal.fire({
+          icon: 'success',
+          title: 'Succes!',
+          text: "Tijden zijn veranderd!",
+          timer: 1000
+      });
+
+      self.$modal.hide("change-appointment");
+
     },
     navigateTo(name, id = null) {
       if (id) this.$router.push({ name, params: { id } });
@@ -72,26 +103,26 @@ export default {
     updateMinEndTime() {
       const self = this;
       if (self.start) {
-        console.log( self.start)
 
         const startTime = new Date(self.start);
-        console.log(startTime, self.start)
         startTime.setMinutes(startTime.getMinutes() + self.calculateTotalDuration());
         self.end = startTime;
       }
     },
     disableTime(date) {
       const self = this
-      
       var disable = false;
       self.events.forEach(event => {
         var start = new Date(event.start);
         var end = new Date(event.end);
-        if (date >= start.setMinutes(start.getMinutes() - 10) && date <= end.setMinutes(end.getMinutes() + 10)) {
+        if (date >= start.setMinutes(start.getMinutes() - (self.calculateTotalDuration())) && date <= end) {
           disable = true;
         }
       });
+      var selectedDate = new Date(self.date);
+      selectedDate.setHours(17, 0, 0);
 
+      if (date <= selectedDate && date > selectedDate.setMinutes(selectedDate.getMinutes() - self.calculateTotalDuration())) disable = true;
       return disable;
 
     },
