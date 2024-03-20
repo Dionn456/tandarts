@@ -33,6 +33,11 @@
               Afspraken
             </router-link>
           </li>
+          <li v-if="user.role_id == 4" class="nav-item">
+            <router-link :to="{ name: 'analytics' }" class="nav-link" active-class="active">
+              Analyse
+            </router-link>
+          </li>
 
           <li v-if="user" class="nav-item dropdown mx-3">
             <a class="nav-link dropdown-toggle text-dark" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

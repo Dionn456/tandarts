@@ -1,7 +1,7 @@
 <template>
     <div>
       <div class="col-lg-12">
-        <card title="Analyse behandelingen / beoordeling">
+        <card title="Aantal behandelingen" class="mb-2">
           <div class="mb-2 row">
             <label class="col-md-12 col-form-label">Selecteer een tandarts</label>
             <div class="col-md-12">
@@ -17,7 +17,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="treatment in treatments" :key="treatment.id">
+                  <tr v-for="treatment in aTreatments" :key="treatment.id">
                     <td class="col3">{{ treatment.name }}</td>
                     <td class="col3">{{ treatment.count_treatments }}</td>
                   </tr>
@@ -26,6 +26,31 @@
             </div>
           </div>
         </card>
+
+        <card title="Reviews">
+          <div class="mb-2 row">
+            <div>
+              <table id="dtBasicExample" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
+                <thead>
+                  <tr>
+                    <th class="th-sm">Behandeling</th>
+                    <th class="th-sm">Aantal beoordeelde behandelingen</th>
+                    <th class="th-sm">Tevredenheid</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="treatment in rTreatments" :key="treatment.id">
+                    <td class="col3">{{ treatment.name }}</td>
+                    <td class="col3">{{ treatment.ratings }}</td>
+                    <td class="col3"><span v-if="treatment.rating_good != null">{{ (treatment.rating_good / treatment.ratings) * 100 }}%</span><span v-else>-</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </card>
+
+       
       </div>
     </div>
     
@@ -47,7 +72,8 @@ import 'vue-select/dist/vue-select.css';
       return {
         dentists: [],
         dentist: null,
-        treatments: [],
+        aTreatments: [],
+        rTreatments: [],
       }
     },
     metaInfo () {
@@ -75,10 +101,11 @@ import 'vue-select/dist/vue-select.css';
       async changeUser() {
         const self = this;
         var response = await self.$https.get('/api/treatments/analytics/'+ self.dentist.id);
-        var treatments = response.data;
-        if (treatments)
+        var data = response.data;
+        if (data)
         {
-            self.treatments = treatments;
+            self.aTreatments = data.amount;
+            self.rTreatments = data.reviews;
         }
       } 
 

@@ -1,6 +1,7 @@
 <template>
     <div>
       <changeAppointment ref="change" :appointment="appointment" />
+      <viewAppointment ref="view" />
       <!-- <viewAppointment ref="view" /> -->
       <div class="row">
         <div class="col-lg-4">
@@ -68,11 +69,13 @@
   import FullCalendar from '@fullcalendar/vue'
   import dayGridPlugin from '@fullcalendar/daygrid'
   import interactionPlugin from '@fullcalendar/interaction'
+  
 
   import DatePicker from 'vue2-datepicker';
   import 'vue2-datepicker/index.css';
 
   import changeAppointment from '../../modals/changeAppointment.vue';
+  import viewAppointment from '../../modals/viewAppointment.vue';
 
 import 'vue-select/dist/vue-select.css';
   
@@ -80,7 +83,7 @@ import 'vue-select/dist/vue-select.css';
   export default {
     middleware: 'auth',
     components: {
-      FullCalendar, DatePicker, changeAppointment
+      FullCalendar, DatePicker, changeAppointment, viewAppointment
     },
     data() {
       return {
@@ -239,7 +242,7 @@ import 'vue-select/dist/vue-select.css';
         const self = this;
         console.warn('event click', event);
   
-        // self.$refs.view.show(event.event);
+        self.$refs.view.show(event.event);
   
       },
       createAppointment() {

@@ -69,16 +69,23 @@ class UserController extends Controller
         $user->lastname = $request->lastname;
         $user->email = $request->email;
         $user->phone = $request->phone;
+        $user->role_id = $request->role_id;
         if (strlen($request->password) >= 4) $user->password = Hash::make($request->password);
         $user->save();
 
-        $address = ($h = Address::where('id', $user->id)->first()) ? $h : new Address;
-        $address->id = $address->id;
-        $address->zip_code = $request->address["zip_code"];
-        $address->city = $request->address["city"];
-        $address->street = $request->address["street"];
-        $address->number = $request->address["number"];
-        $address->save();
+        if ($request->address["zip_code"] != null && $request->address["city"] != null && $request->address["street"] != null && $request->address["number"] != null)
+        {
+            $address = ($h = Address::where('id', $user->id)->first()) ? $h : new Address;
+            $address->id = $address->id;
+            $address->zip_code = $request->address["zip_code"];
+            $address->city = $request->address["city"];
+            $address->street = $request->address["street"];
+            $address->number = $request->address["number"];
+            $address->save();
+    
+            $user->address_id = $address->id;
+            $user->save();
+        }
 
         return response()->json($user);
     }

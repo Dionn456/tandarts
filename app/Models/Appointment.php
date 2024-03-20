@@ -10,7 +10,7 @@ class Appointment extends Model
     use HasFactory;
 
     protected $with = [
-        'dentist', 'assistent', 'patient', 'room', 'status', "treatments"
+        'dentist', 'assistent', 'patient', 'room', 'status', "treatments", "users"
     ];
 
     public function dentist()
@@ -45,8 +45,8 @@ class Appointment extends Model
 
 
     
-    // public function users()
-    // {
-    //     return $this->hasMany(AppointmentUser::class, "appointment_id", "id");
-    // }
+    public function users()
+    {
+        return $this->hasMany(AppointmentUser::class, "appointment_id", "id");
+    }
 }

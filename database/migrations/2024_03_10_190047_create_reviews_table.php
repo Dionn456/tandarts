@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->unsignedBigInteger('appointment_id')->nullable();
-            $table->integer("rating");
+            $table->string("rating");
             $table->string("title")->nullable();
             $table->text("description")->nullable();
             

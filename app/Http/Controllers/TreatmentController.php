@@ -31,7 +31,18 @@ class TreatmentController extends Controller
         ON t.id = at.treatment_id
         GROUP BY t.id;");
 
-        return response()->json($treatments);
+        $treatments2 = DB::select("SELECT *, 
+		COUNT(r.rating) as ratings,
+        SUM(r.rating = 'goed') as rating_good,
+        SUM(r.rating = 'slecht') as rating_bad
+        FROM treatments as t
+        LEFT JOIN (appointment_treatments as at
+          INNER JOIN reviews as r ON r.appointment_id = at.appointment_id
+        )
+        ON t.id = at.treatment_id
+        GROUP BY t.id;");
+
+        return response()->json(["amount" => $treatments, "reviews" => $treatments2]);
     }
 
     /**
