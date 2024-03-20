@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Treatment;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TreatmentController extends Controller
 {
@@ -16,6 +17,20 @@ class TreatmentController extends Controller
     public function index(): JsonResponse
     {
         $treatments = Treatment::all(); 
+        return response()->json($treatments);
+    }
+
+    public function analytics($user_id): JsonResponse
+    {
+        $treatments = DB::select("SELECT *, 
+        COUNT(at.treatment_id) as count_treatments
+        FROM treatments as t
+        LEFT JOIN (appointment_treatments as at
+          INNER JOIN appointment_users as au ON au.appointment_id = at.appointment_id AND au.user_id = ".$user_id." AND au.role_id = 2
+        )
+        ON t.id = at.treatment_id
+        GROUP BY t.id;");
+
         return response()->json($treatments);
     }
 

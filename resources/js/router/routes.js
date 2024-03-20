@@ -20,6 +20,8 @@ export default [
 
   { path: '/enquete/:id', name: 'enquete', component: page('enquete/enquete.vue') },
 
+  { path: '/analytics', name: 'analytics', component: page('analytics/analytics.vue') },
+
   { path: '/appointments', name: 'appointments', component: page('appointments/appointments.vue') },
   { path: '/viewAppointments', name: 'viewAppointments', component: page('appointments/viewAppointments.vue') },
   { path: '/viewAppointment/:id', name: 'viewAppointment', component: page('appointments/viewAppointment.vue') },
