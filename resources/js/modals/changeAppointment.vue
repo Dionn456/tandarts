@@ -18,7 +18,7 @@
             <button type="button" class="btn btn-primary w-100" @click="selectTimes()">Tijden selecteren</button>
           </div>
           <div>
-            <label>Afspraken van <span v-if="appointment.dentist">{{ appointment.dentist.firstname }} {{ appointment.dentist.middlename }} {{ appointment.dentist.lastname }}</span></label>
+            <label>Afspraken</label>
             <div v-for="event in events" :key="event.id" class="row">
               <label class="col-md-12">
               Tijden {{ moment(event.start).format('HH:mm') }} - {{ moment(event.end).format('HH:mm') }}
@@ -109,9 +109,15 @@ export default {
         self.end = startTime;
       }
     },
-    disableTime(date) {
+    disableTime(datm) {
       const self = this
       var disable = false;
+
+      var date = new Date(self.date);
+      date.setHours(datm.getHours());
+      date.setMinutes(datm.getMinutes());
+      date.setSeconds(datm.getSeconds());
+
       self.events.forEach(event => {
         var start = new Date(event.start);
         var end = new Date(event.end);

@@ -236,7 +236,7 @@ import 'vue-select/dist/vue-select.css';
       },
       filterEventsDay(date, dentist) {
         const self = this;
-        return self.calendarOptions.events.filter((event) => (new Date(event.start).setHours(0, 0, 0, 0) == new Date(date).setHours(0, 0, 0, 0)) && event.dentist.user_id == self.appointment.dentist.id)
+        return self.calendarOptions.events.filter((event) => (new Date(event.start).setHours(0, 0, 0, 0) == new Date(date).setHours(0, 0, 0, 0)) )  // && event.dentist.user_id == self.appointment.dentist.id
       },
       handleEventClick(event) {
         const self = this;
@@ -313,7 +313,7 @@ import 'vue-select/dist/vue-select.css';
 
         if (self.appointment.user !== null)
         {
-          dentists = dentists.filter(dentist => dentist.id !== self.appointment.user.id);
+          dentists = dentists.filter(dentist => dentist.id !== self.appointment.user.id && (dentist.assistent ? dentist.assistent.link_user_id : null) !== self.appointment.user.id);
         }
 
         return dentists;

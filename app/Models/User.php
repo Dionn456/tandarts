@@ -59,7 +59,8 @@ class User extends Authenticatable implements JWTSubject //, MustVerifyEmail
     protected $with = [
         'role',
         'address',
-        'users'
+        'users',
+        'assistent',
     ];
 
     /**
@@ -94,6 +95,11 @@ class User extends Authenticatable implements JWTSubject //, MustVerifyEmail
     {
         return $this->hasOne(Address::class, "id", "address_id");
     }
+
+    public function assistent()
+    {
+        return $this->hasOne(UserUser::class, "user_id", "id")->where("role_id", 3);
+    }   
 
     public function users()
     {
