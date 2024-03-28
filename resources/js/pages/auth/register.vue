@@ -51,8 +51,8 @@
           <div class="mb-3 row">
             <label class="col-md-3 col-form-label text-md-end">Geboortedatum</label>
             <div class="col-md-7">
-              <input v-model="form.birthdate" :class="{ 'is-invalid': form.errors.has('birthdate') }"
-                class="form-control" type="date" name="birthdate">
+              <input v-model="form.birthdate" max='2000-13-13' :class="{ 'is-invalid': form.errors.has('birthdate') }"
+                class="form-control" type="date" name="birthdate" id="birth_date">
               <has-error :form="form" field="geboortedatum" />
             </div>
           </div>
@@ -125,6 +125,22 @@ export default {
   mounted() {
     const self = this;
     self.fetchUser();
+
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth() + 1; //January is 0!
+    var yyyy = today.getFullYear();
+
+    if (dd < 10) {
+      dd = '0' + dd;
+    }
+
+    if (mm < 10) {
+      mm = '0' + mm;
+    } 
+        
+    today = yyyy + '-' + mm + '-' + dd;
+    document.getElementById("birth_date").setAttribute("max", today);
   },
 
   data: () => ({
