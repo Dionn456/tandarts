@@ -33,7 +33,7 @@
               Afspraken
             </router-link>
           </li>
-          <li v-if="user.role_id == 4" class="nav-item">
+          <li v-if="user.role_id == 1" class="nav-item">
             <router-link :to="{ name: 'analytics' }" class="nav-link" active-class="active">
               Analyse
             </router-link>
