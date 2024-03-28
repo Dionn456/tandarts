@@ -52,23 +52,27 @@ class RegisterController extends Controller
     /**
      * Create a new user instance after a valid registration.
      */
-    protected function create(array $data): array
-    {
-        $user = User::create([
-            'firstname' => $data['firstname'],
-            'lastname' => $data['lastname'],
-            'phone' => $data['phone'],
-            'email' => $data['email'],
-            'role_id' => '4',
-            'password' => Hash::make($data['password']),
-        ]);
-        
-        $userUser = UserUser::create([
-            'user_id' => $user->id,
-            'link_user_id' => $data['dentist_id'],
-            'role_id' => $data['role_id']
-        ]);
-        
-        return [$user, $userUser];
-    }
+/**
+ * Create a new user instance after a valid registration.
+ */
+protected function create(array $data): User
+{
+    $user = User::create([
+        'firstname' => $data['firstname'],
+        'lastname' => $data['lastname'],
+        'phone' => $data['phone'],
+        'email' => $data['email'],
+        'role_id' => '4',
+        'password' => Hash::make($data['password']),
+    ]);
+    
+    UserUser::create([
+        'user_id' => $user->id,
+        'link_user_id' => $data['dentist_id'],
+        'role_id' => $data['role_id']
+    ]);
+    
+    return $user;
+}
+
 }
