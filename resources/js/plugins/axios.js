@@ -73,13 +73,13 @@ async function serverError (response) {
 
     serverErrorModalShown = true
   } else {
-    Swal.fire({
-      icon: 'error',
-      title: i18n.t('error_alert_title'),
-      text: i18n.t('error_alert_text'),
-      reverseButtons: true,
-      confirmButtonText: i18n.t('ok'),
-      cancelButtonText: i18n.t('cancel')
-    })
+    // Swal.fire({
+    //   icon: 'error',
+    //   title: i18n.t('error_alert_title'),
+    //   text: i18n.t('error_alert_text'),
+    //   reverseButtons: true,
+    //   confirmButtonText: i18n.t('ok'),
+    //   cancelButtonText: i18n.t('cancel')
+    // })
   }
 }
