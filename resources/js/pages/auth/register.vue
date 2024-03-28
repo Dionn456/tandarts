@@ -48,6 +48,16 @@
             </div>
           </div>
 
+          <div class="mb-3 row">
+            <label class="col-md-3 col-form-label text-md-end">Geboortedatum</label>
+            <div class="col-md-7">
+              <input v-model="form.birthdate" :class="{ 'is-invalid': form.errors.has('birthdate') }"
+                class="form-control" type="date" name="birthdate">
+              <has-error :form="form" field="geboortedatum" />
+            </div>
+          </div>
+
+
           <!-- Password -->
           <div class="mb-3 row">
             <label class="col-md-3 col-form-label text-md-end">Wachtwoord</label>
@@ -124,6 +134,7 @@ export default {
       phone: '',
       email: '',
       password: '',
+      birthdate: '',
       password_confirmation: '',
       role_id: null,
       dentist_id: null
